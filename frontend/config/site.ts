@@ -22,7 +22,7 @@ export const siteConfig: SiteConfig = {
     },
     {
       title: "Jobs",
-      href: "/",
+      href: "/browse",
     },
     {
       title: "Employer zone",
