@@ -38,8 +38,8 @@ export const siteConfig: SiteConfig = {
     },
   ],
   links: {
-    twitter: "https://twitter.com/shadcn",
-    github: "https://github.com/shadcn/ui",
-    docs: "https://ui.shadcn.com",
+    twitter: "https://twitter.com/neverwin",
+    github: "https://github.com/danielchim/tutor-system",
+    docs: "https://genderconfused.men",
   },
 }
