@@ -16,7 +16,7 @@ const CompanyManagementWidget = ({ companies }: { companies: Company[] }) => {
   const visibleCompanies = showAll ? companies : companies.slice(0, 5);
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
+    <div className="rounded-lg shadow p-4">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-medium">Company Management</h3>
         <button

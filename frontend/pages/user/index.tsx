@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Layout } from '@/components/layout';
 import {Button} from "@/components/ui/button"
 
@@ -56,6 +56,8 @@ const user: User = {
 };
 
 const Dashboard = () => {
+  const [selectedJobApplication, setSelectedJobApplication] = useState<JobApplication | null>(null);
+
   return (
     <Layout>
       <div className="container mx-auto py-6">
@@ -68,20 +70,29 @@ const Dashboard = () => {
           </Button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg shadow py-6 px-8">
+          <div className="rounded-lg shadow py-6 px-8">
             <h2 className="text-2xl font-bold mb-4">Job Applications</h2>
             {user.jobApplications.map((jobApplication) => (
-              <div key={jobApplication.id} className="mb-4">
+              <div key={jobApplication.id} className="mb-4" onClick={() => setSelectedJobApplication(jobApplication)}>
                 <h3 className="text-lg font-medium">{jobApplication.jobTitle}</h3>
                 <p className="text-gray-600">{jobApplication.company} - {jobApplication.location}</p>
                 <p className="text-sm text-gray-600">{jobApplication.dateApplied} - {jobApplication.status}</p>
               </div>
             ))}
           </div>
-          <div className="bg-white rounded-lg shadow py-6 px-8 md:col-span-2">
+          <div className="rounded-lg shadow py-6 px-8 md:col-span-2">
             <h2 className="text-2xl font-bold mb-4">Job Application Details</h2>
-            {/* Placeholder for job application details */}
+            {selectedJobApplication ? (
+              <>
+                <h3 className="text-lg font-medium">{selectedJobApplication.jobTitle}</h3>
+                <p className="text-gray-600">{selectedJobApplication.company} - {selectedJobApplication.location}</p>
+                <p className="text-sm text-gray-600">{selectedJobApplication.dateApplied} - {selectedJobApplication.status}</p>
+              </>
+            ) : (
+              <p className="text-gray-600">Please select a job application from the list to view details.</p>
+            )}
           </div>
+
         </div>
       </div>
     </Layout>

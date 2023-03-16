@@ -23,9 +23,7 @@ const Login: React.FC = () => {
         />
       </div>
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center ">
-        <h1 className="text-3xl font-extrabold leading-tight tracking-tighter sm:text-3xl md:text-5xl lg:text-6xl">
-          Login
-        </h1>
+        <h1 className="text-4xl font-bold mb-8">Login</h1>
         <form className="w-full max-w-md" onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-500 font-bold mb-2" htmlFor="email">

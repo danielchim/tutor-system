@@ -11,7 +11,7 @@ export const JobManagementWidget: React.FC<Props> = ({ jobs }) => {
   const [showAll, setShowAll] = useState(false);
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
+    <div className="rounded-lg shadow-lg p-6">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-medium">Job Management</h3>
         <button

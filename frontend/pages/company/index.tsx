@@ -77,11 +77,10 @@ const CompanyDashboard = () => {
     <Layout>
       <div className="container items-center">
         <div className="flex items-center justify-between mb-6 w-full p-4">
-          <h1 className="text-3xl font-extrabold tracking-tighter text-slate-900">
+          <h1 className="text-3xl font-extrabold leading-tight tracking-tighter sm:text-3xl">
             Welcome back, demo
           </h1>
         </div>
-
         <div className="w-full p-4">
           <UserManagementWidget />
         </div>
