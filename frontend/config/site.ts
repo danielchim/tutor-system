@@ -26,15 +26,15 @@ export const siteConfig: SiteConfig = {
     },
     {
       title: "Employer zone",
-      href: "/",
+      href: "/user",
     },
     {
       title: "Company",
-      href: "/",
+      href: "/company",
     },
     {
       title: "Admin",
-      href: "/",
+      href: "/admin/dashboard",
     },
   ],
   links: {
