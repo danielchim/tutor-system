@@ -1,5 +1,5 @@
 import React from "react";
-// import { signIn } from "next-auth/client";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import logo from "../public/next.svg";
 import {Button} from "@/components/ui/button";
@@ -8,7 +8,7 @@ import Link from "next/link";
 const Login: React.FC = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // signIn();
+    signIn();
   };
 
   return (
@@ -33,6 +33,7 @@ const Login: React.FC = () => {
               className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="email"
               type="email"
+              name="email"
               required
             />
           </div>
@@ -44,6 +45,7 @@ const Login: React.FC = () => {
               className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="password"
               type="password"
+              name="password"
               required
             />
           </div>
