@@ -1,27 +1,59 @@
 import NextAuth, {NextAuthOptions, Session, User} from "next-auth";
 import { JWT } from "next-auth/jwt";
 import {AdapterUser} from "next-auth/adapters";
+import CredentialsProvider from "next-auth/providers/credentials"
+import {mockProviders} from "next-auth/client/__tests__/helpers/mocks";
+
+
+
 
 const options: NextAuthOptions = {
-  providers: [],
-  callbacks: {
-    jwt: async ({ token, user }) => {
-      if (user) {
-        token.userId = user.id;
-        token.email = user.email;
-      }
-      return token as JWT;
-    },
-    session: async (params: { session: Session; user: User | AdapterUser; token: JWT; }) => {
-      params.session.userId = params.token.userId;
-      params.session.email = params.token.email;
+  providers: [
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {},
+      async authorize(credentials, req) {
+        const loginData = {
+          identifier: credentials.email,
+          password:  credentials.password
+        }
 
-      return params.session;
+        const res = await fetch("http://localhost:1337/api/auth/local", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(loginData),
+        });
+
+        const user = await res.json();
+        console.log(user)
+        // If no error and we have user data, return it
+        if (res.ok && user) {
+          console.log(user)
+          return user;
+        }
+        // Return null if user data could not be retrieved
+        return null
+      },
+
+    })
+  ],
+  callbacks: {
+    async session({ session, token }) {
+      session.user = token.user;
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.user = user;
+      }
+      return token;
     },
   },
   pages: {
-    signIn: "/auth/signin",
-    signOut: "/auth/signout",
+    signIn: "/login",
+    signOut: "/signout",
   },
   events: {},
 };

@@ -4,8 +4,10 @@ import Link from "next/link"
 import { siteConfig } from "@/config/site"
 import { Layout } from "@/components/layout"
 import { buttonVariants } from "@/components/ui/button"
+import {useSession} from "next-auth/react";
 
 export default function IndexPage() {
+  console.log(useSession())
   return (
     <Layout>
       <Head>

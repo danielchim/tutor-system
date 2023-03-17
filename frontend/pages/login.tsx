@@ -6,9 +6,25 @@ import {Button} from "@/components/ui/button";
 import Link from "next/link";
 
 const Login: React.FC = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    signIn();
+
+
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      console.log(result.error);
+    } else {
+      // Success
+    }
   };
 
   return (
@@ -55,12 +71,11 @@ const Login: React.FC = () => {
                 Register
               </p>
             </Link>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            <Button
               type="submit"
             >
               Sign In
-            </button>
+            </Button>
           </div>
         </form>
       </div>
