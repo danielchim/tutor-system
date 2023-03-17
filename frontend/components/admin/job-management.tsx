@@ -8,17 +8,18 @@ interface Props {
 }
 
 export const JobManagementWidget: React.FC<Props> = ({ jobs }) => {
-  const [showAll, setShowAll] = useState(false);
 
   return (
-    <div className="rounded-lg shadow-lg p-6">
-      <div className="flex justify-between items-center mb-4">
+    <div className="rounded-lg p-6 shadow-lg">
+      <div className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-medium">Job Management</h3>
-        <button
-          className="text-blue-500 hover:text-blue-700 focus:outline-none"
-        >
-          Show more
-        </button>
+        <Link href={'/admin/jobs'}>
+          <button
+            className="text-blue-500 hover:text-blue-700 focus:outline-none"
+          >
+            Show more
+          </button>
+        </Link>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full table-auto">

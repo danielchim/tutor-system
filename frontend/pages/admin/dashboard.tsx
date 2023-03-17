@@ -6,71 +6,62 @@ import {JobManagementWidget} from '@/components/admin/job-management'
 import CompanyManagementWidget from '@/components/admin/company-management';
 import {Job} from "@/types/job";
 import Company from "@/types/company";
-import Link from "next/link";
-import {siteConfig} from "@/config/site";
-import {Button, buttonVariants} from "@/components/ui/button";
+import {Employer} from "@/types/employer";
 
-const jobs: Job[] = [
-  {
-    id: 1,
-    title: "Software Engineer",
-    company: "Acme Corporation",
-    employer: "John Doe",
-    location: "San Francisco, CA",
-    salary: "$100,000 - $150,000",
-    description:
-      "We are seeking a highly skilled software engineer to join our team and help develop cutting-edge software applications.",
-    type: "full-time",
-  },
-  {
-    id: 2,
-    title: "Product Manager",
-    company: "XYZ Corp",
-    employer: "Jane Smith",
-    location: "New York, NY",
-    salary: "$120,000 - $180,000",
-    description:
-      "We are looking for a talented product manager to help us build amazing products that delight our customers.",
-    type: "full-time",
-  },
-  {
-    id: 3,
-    title: "Marketing Specialist",
-    company: "ABC Company",
-    employer: "Joe Smith",
-    location: "Los Angeles, CA",
-    salary: "$70,000 - $90,000",
-    description:
-      "We are seeking a marketing specialist to help us develop and execute marketing campaigns that drive results.",
-    type: "part-time",
-  },
-  // add more jobs as needed
-];
 
-const companies:Company[] = [
-  {
-    id: 1,
-    name: 'Acme Inc.',
-    owner: 'John Doe',
-    registrationDate: '2022-02-01',
-    status: 'approved'
-  },
-  {
-    id: 2,
-    name: 'XYZ Corp',
-    owner: 'Jane Smith',
-    registrationDate: '2021-12-15',
-    status: 'rejected'
-  },
-  {
-    id: 3,
-    name: 'Smith & Co',
-    owner: 'Mike Johnson',
-    registrationDate: '2022-01-10',
-    status: 'pending'
-  }
-]
+const company1: Company = {
+  id: 1,
+  name: "ABC Corporation",
+  owner: "John Doe",
+  registrationDate: "2022-01-01",
+  status: "approved",
+};
 
+const company2: Company = {
+  id: 2,
+  name: "XYZ Inc.",
+  owner: "Jane Smith",
+  registrationDate: "2022-02-15",
+  status: "rejected",
+};
+
+const employer1: Employer = {
+  id: 1,
+  name: "John Doe",
+  company: company1,
+};
+
+const employer2: Employer = {
+  id: 2,
+  name: "Jane Smith",
+  company: company2,
+};
+
+const job1: Job = {
+  id: 1,
+  title: "Software Engineer",
+  company: company1,
+  employer: employer1,
+  location: "New York City, NY",
+  salary: "$120,000 - $150,000",
+  description: "We're looking for a skilled software engineer to join our team.",
+  type: "full-time",
+};
+
+const job2: Job = {
+  id: 2,
+  title: "Marketing Manager",
+  company: company2,
+  employer: employer2,
+  location: "San Francisco, CA",
+  salary: "$100,000 - $120,000",
+  description: "We're seeking an experienced marketing manager to lead our team.",
+  type: "full-time",
+};
+
+const companies: Company[] = [company1, company2];
+const employers: Employer[] = [employer1, employer2];
+const jobs: Job[] = [job1, job2];
 
 const AdminDashboard = () => {
   return (

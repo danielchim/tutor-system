@@ -28,10 +28,14 @@ const Browse = () => {
   return (
     <Layout>
       <section className="container grid items-start gap-6 pt-6 pb-8 md:py-10">
+        <div className="flex items-center justify-between mb-6 w-full">
+          <h1 className="text-3xl font-extrabold leading-tight tracking-tighter sm:text-3xl">
+            Job listings
+          </h1>
+        </div>
         <div className="flex flex-col gap-4">
           <div className="flex gap-4">
             <div className="w-1/4">
-              <h2 className="text-3xl font-medium mb-4">Job Listings</h2>
               {jobs.map((job) => (
                 <div
                   key={job.id}

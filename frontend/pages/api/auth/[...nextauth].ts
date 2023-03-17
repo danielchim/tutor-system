@@ -1,18 +1,20 @@
-import NextAuth, {NextAuthOptions, Session, User} from "next-auth";
-import { JWT } from "next-auth/jwt";
-import {AdapterUser} from "next-auth/adapters";
+import NextAuth, {NextAuthOptions} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"
-import {mockProviders} from "next-auth/client/__tests__/helpers/mocks";
 
-
-
+interface CredentialsWithPassword extends Record<any, any> {
+  email: string;
+  password: string;
+}
 
 const options: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
-      credentials: {},
-      async authorize(credentials, req) {
+      credentials: {
+        email: { label: "Email", type: "email", placeholder: "you@example.com" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials: CredentialsWithPassword, req) {
         const loginData = {
           identifier: credentials.email,
           password:  credentials.password

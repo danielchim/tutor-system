@@ -18,11 +18,14 @@ const UserManagementWidget = () => {
     <div className="shadow-md rounded-lg p-4">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-medium">User Management</h3>
-        <button
-          className="text-blue-500 hover:text-blue-700 focus:outline-none"
-        >
-          Show more
-        </button>
+        <Link href={'/admin/users'}>
+          <button
+            className="text-blue-500 hover:text-blue-700 focus:outline-none"
+          >
+            Show more
+          </button>
+        </Link>
+
       </div>
       <div className="overflow-x-auto">
         <table className="w-full table-auto">
