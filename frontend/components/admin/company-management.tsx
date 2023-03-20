@@ -19,12 +19,15 @@ const CompanyManagementWidget = ({ companies }: { companies: Company[] }) => {
     <div className="rounded-lg shadow p-4">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-medium">Company Management</h3>
-        <button
-          onClick={() => setShowAll(!showAll)}
-          className="text-blue-500 hover:text-blue-700 focus:outline-none"
-        >
-          {showAll ? 'Show less' : 'Show more'}
-        </button>
+        <Link href={"/admin/companies"}>
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="text-blue-500 hover:text-blue-700 focus:outline-none"
+          >
+            Show more
+          </button>
+        </Link>
+
       </div>
       <div className="overflow-x-auto">
         <table className="w-full table-auto">
