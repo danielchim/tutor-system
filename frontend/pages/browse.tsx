@@ -86,3 +86,19 @@ const Browse = () => {
 };
 
 export default Browse;
+
+// This gets called on every request
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await fetch(`${process.env.HOST}:${process.env.PORT}/api/jobs`,{
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+  })
+  const data = await res.json()
+
+  // Pass data to the page via props
+  return { props: { data } }
+}
+
