@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Layout } from '@/components/layout';
 import {useSession} from "next-auth/react";
 import useSWR from 'swr'
+import fetcher from "@/lib/fetcher";
 
 
 interface Job {

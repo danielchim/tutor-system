@@ -8,6 +8,7 @@ import {buttonVariants} from "@/components/ui/button"
 import {Button} from "@/components/ui/button"
 import {useSession} from "next-auth/react";
 import AvatarToggle from "@/components/avatar-toggle";
+import React from "react";
 
 export function SiteHeader() {
   const { data: session } = useSession()
@@ -55,7 +56,6 @@ export function SiteHeader() {
             {
               session?(
                 <AvatarToggle />
-
               ):(
                 <>
                   <Button>
@@ -70,3 +70,5 @@ export function SiteHeader() {
     </header>
   )
 }
+
+export default SiteHeader;

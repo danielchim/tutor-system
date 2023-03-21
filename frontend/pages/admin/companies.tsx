@@ -3,26 +3,89 @@ import {Layout} from "@/components/layout";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import Company from "@/types/company";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription, DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from "@/components/ui/dialog";
+import {AlertDialog, AlertDialogTrigger} from "@/components/ui/alert-dialog";
+import DeleteWarn from "@/components/delete-warn";
+import {Label} from "@/components/ui/label";
+import {Select, SelectValue} from "@radix-ui/react-select";
+import {SelectContent, SelectItem, SelectTrigger} from "@/components/ui/select";
+import useSWR from "swr";
+import fetcher from "@/lib/fetcher";
+import {useSession} from "next-auth/react";
 
-const company1: Company = {
-  id: 1,
-  name: "ABC Corporation",
-  owner: "John Doe",
-  registrationDate: "2022-01-01",
-  status: "approved",
-};
+type EditCompany = {
+  name:string
+  owner:string
+  status: string
+}
 
-const company2: Company = {
-  id: 2,
-  name: "XYZ Inc.",
-  owner: "Jane Smith",
-  registrationDate: "2022-02-15",
-  status: "rejected",
-};
 
-const companies:Company[] = [company1,company2]
+const EditDialog = ({name,owner,status}:EditCompany) => {
+  return(
+    <DialogContent className="sm:max-w-[425px]">
+      <DialogHeader>
+        <DialogTitle>Edit profile</DialogTitle>
+        <DialogDescription>
+          Make changes to your profile here. Click save when you're done.
+        </DialogDescription>
+      </DialogHeader>
+      <div className="grid gap-4 py-4">
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="name" className="text-right">
+            Username
+          </Label>
+          <Input id="name" value={name} className="col-span-3" />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="username" className="text-right">
+            Email
+          </Label>
+          <Input id="username" value={owner} className="col-span-3" />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="username" className="text-right">
+            Role
+          </Label>
+          <Select>
+            <SelectTrigger className="col-span-3">
+              <SelectValue placeholder={status} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="admin">Admin</SelectItem>
+              <SelectItem value="user">Applicant</SelectItem>
+              <SelectItem value="system">Employer</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <DialogFooter>
+        <Button type="submit">Save changes</Button>
+      </DialogFooter>
+    </DialogContent>
 
-const UserManagement = () => {
+  )
+}
+
+const CompanyManagement = () => {
+  const session= useSession().data;
+  const {data, error} = useSWR(['http://localhost:1337/api/companies?populate=users_permissions_user,', session?.user.jwt], fetcher);
+  console.log(data)
+  if (error) {
+    return (
+      <Layout>
+        <section className="container grid items-start gap-6 pt-6 pb-8 md:py-10">
+          <p>An error occurred while fetching the data.</p>
+        </section>
+      </Layout>
+    )
+  }
   return (
     <Layout>
       <div className="container items-center">
@@ -49,23 +112,34 @@ const UserManagement = () => {
             </thead>
 
             <tbody>
-            {companies.map((company) => (
-              <tr key={company.id} className="border-t border-gray-200">
-                <td className="px-4 py-2">{company.id}</td>
-                <td className="px-4 py-2">{company.name}</td>
-                <td className="px-4 py-2">{company.owner}</td>
-                <td className="px-4 py-2">{company.registrationDate}</td>
-                <td className="px-4 py-2">{company.status}</td>
-                <td className="px-4 py-2">
-                  <Button>
-                    Edit
-                  </Button>
-                  <Button variant="destructive">
-                    Delete
-                  </Button>
-                </td>
-              </tr>
-            ))}
+            {/*{data.map((company) => (*/}
+            {/*  <tr key={company.id} className="border-t border-gray-200">*/}
+            {/*    <td className="px-4 py-2">{company.id}</td>*/}
+            {/*    <td className="px-4 py-2">{company.name}</td>*/}
+            {/*    <td className="px-4 py-2">{company.owner}</td>*/}
+            {/*    <td className="px-4 py-2">{company.registrationDate}</td>*/}
+            {/*    <td className="px-4 py-2">{company.status}</td>*/}
+            {/*    <td className="px-4 py-2">*/}
+            {/*      <Dialog>*/}
+            {/*        <DialogTrigger>*/}
+            {/*          <Button>*/}
+            {/*            Edit*/}
+            {/*          </Button>*/}
+            {/*        </DialogTrigger>*/}
+
+            {/*        <EditDialog name={company.name} owner={company.owner} status={company.status}/>*/}
+            {/*      </Dialog>*/}
+            {/*      <AlertDialog>*/}
+            {/*        <AlertDialogTrigger >*/}
+            {/*          <Button variant="destructive">*/}
+            {/*            Delete*/}
+            {/*          </Button>*/}
+            {/*        </AlertDialogTrigger>*/}
+            {/*        <DeleteWarn />*/}
+            {/*      </AlertDialog>*/}
+            {/*    </td>*/}
+            {/*  </tr>*/}
+            {/*))}*/}
             </tbody>
 
           </table>
@@ -78,4 +152,4 @@ const UserManagement = () => {
   );
 };
 
-export default UserManagement;
+export default CompanyManagement;

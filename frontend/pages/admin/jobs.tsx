@@ -5,60 +5,88 @@ import {Input} from "@/components/ui/input";
 import Company from "@/types/company";
 import {Employer} from "@/types/employer";
 import {Job} from "@/types/job";
+import {useSession} from "next-auth/react";
+import useSWR from "swr";
+import fetcher from "@/lib/fetcher";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription, DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from "@/components/ui/dialog";
+import {Label} from "@/components/ui/label";
+import {Select, SelectValue} from "@radix-ui/react-select";
+import {SelectContent, SelectItem, SelectTrigger} from "@/components/ui/select";
+import {AlertDialog, AlertDialogTrigger} from "@/components/ui/alert-dialog";
+import DeleteWarn from "@/components/delete-warn";
 
-const company1: Company = {
-  id: 1,
-  name: "ABC Corporation",
-  owner: "John Doe",
-  registrationDate: "2022-01-01",
-  status: "approved",
-};
 
-const company2: Company = {
-  id: 2,
-  name: "XYZ Inc.",
-  owner: "Jane Smith",
-  registrationDate: "2022-02-15",
-  status: "rejected",
-};
+type EditJob = {
+  name: string
+  company: string
+  employer: string
+}
 
-const employer1: Employer = {
-  id: 1,
-  name: "John Doe",
-  company: company1,
-};
+const EditDialog = ({name,company,employer}:EditJob) => {
+  console.log(name.name)
+  return(
+    <DialogContent className="sm:max-w-[425px]">
+      <DialogHeader>
+        <DialogTitle>Edit profile</DialogTitle>
+        <DialogDescription>
+          Make changes to your profile here. Click save when you're done.
+        </DialogDescription>
+      </DialogHeader>
+      <div className="grid gap-4 py-4">
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="name" className="text-right">
+            Username
+          </Label>
+          <Input id="name" value={name} className="col-span-3" />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="username" className="text-right">
+            Job title
+          </Label>
+          <Input id="username" value={company} className="col-span-3" />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="username" className="text-right">
+            Company
+          </Label>
+          <Select>
+            <SelectTrigger className="col-span-3">
+              <SelectValue placeholder={employer} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="admin">Admin</SelectItem>
+              <SelectItem value="user">Applicant</SelectItem>
+              <SelectItem value="system">Employer</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <DialogFooter>
+        <Button type="submit">Save changes</Button>
+      </DialogFooter>
+    </DialogContent>
+  )
+}
 
-const employer2: Employer = {
-  id: 2,
-  name: "Jane Smith",
-  company: company2,
-};
-
-const job1: Job = {
-  id: 1,
-  title: "Software Engineer",
-  company: company1,
-  employer: employer1,
-  location: "New York City, NY",
-  salary: "$120,000 - $150,000",
-  description: "We're looking for a skilled software engineer to join our team.",
-  type: "full-time",
-};
-
-const job2: Job = {
-  id: 2,
-  title: "Marketing Manager",
-  company: company2,
-  employer: employer2,
-  location: "San Francisco, CA",
-  salary: "$100,000 - $120,000",
-  description: "We're seeking an experienced marketing manager to lead our team.",
-  type: "full-time",
-};
-
-const jobs: Job[] = [job1, job2];
-
-const UserManagement = () => {
+const JobsManagement = () => {
+  const session= useSession().data;
+  const {data, error} = useSWR(['http://localhost:1337/api/jobs?populate=company,employer', session?.user.jwt], fetcher);
+  if (error) {
+    return (
+      <Layout>
+        <section className="container grid items-start gap-6 pt-6 pb-8 md:py-10">
+          <p>An error occurred while fetching the data.</p>
+        </section>
+      </Layout>
+    )
+  }
   return (
     <Layout>
       <div className="container items-center">
@@ -83,19 +111,29 @@ const UserManagement = () => {
             </tr>
             </thead>
             <tbody>
-            {jobs.map((job) => (
+            {data?.data?.map((job) => (
               <tr key={job.id} className="border-t border-gray-200">
-                <td className="px-4 py-2">{job.title}</td>
-                <td className="px-4 py-2">{job.title}</td>
-                <td className="px-4 py-2">{job.company.name}</td>
-                <td className="px-4 py-2">{job.employer.name}</td>
+                <td className="px-4 py-2">{job.id}</td>
+                <td className="px-4 py-2">{job.attributes.name}</td>
+                <td className="px-4 py-2">{job.attributes.company.data.attributes.name}</td>
+                <td className="px-4 py-2">{job.attributes.employer.data.attributes.name}</td>
                 <td className="px-4 py-2">
-                  <Button>
-                    Edit
-                  </Button>
-                  <Button variant="destructive">
-                    Delete
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger>
+                      <Button>
+                        Edit
+                      </Button>
+                    </DialogTrigger>
+                    <EditDialog name={job.attributes.name} company={job.attributes.company.data.attributes.name} employer={job.attributes.employer.data.attributes.name}/>
+                  </Dialog>
+                  <AlertDialog>
+                    <AlertDialogTrigger >
+                      <Button variant="destructive">
+                        Delete
+                      </Button>
+                    </AlertDialogTrigger>
+                    <DeleteWarn />
+                  </AlertDialog>
                 </td>
               </tr>
             ))}
@@ -110,4 +148,4 @@ const UserManagement = () => {
   );
 };
 
-export default UserManagement;
+export default JobsManagement;

@@ -14,3 +14,5 @@ const fetcher = async (url: string, token: string) => {
   const data = await res.json();
   return data;
 };
+
+export default fetcher;

@@ -17,6 +17,7 @@ import {Select, SelectValue} from "@radix-ui/react-select";
 import {SelectContent, SelectItem, SelectTrigger} from "@/components/ui/select";
 import {useSession} from "next-auth/react";
 import useSWR from "swr";
+import fetcher from "@/lib/fetcher";
 
 
 type User = {
@@ -28,16 +29,12 @@ type User = {
 
 type EditUser = {
   name: string,
-  email: string
+  email: string,
+  role: string;
 }
 
-const initialUsers: User[] = [
-  { id: 1, username: "user1", email: "user1@example.com", role: "user" },
-  { id: 2, username: "user2", email: "user2@example.com", role: "admin" },
-  { id: 3, username: "user3", email: "user3@example.com", role: "user" },
-];
 
-const EditDialog = ({name,email}:EditUser) => {
+const EditDialog = ({name,email,role}:EditUser) => {
   return(
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
@@ -65,11 +62,11 @@ const EditDialog = ({name,email}:EditUser) => {
           </Label>
           <Select>
             <SelectTrigger className="col-span-3">
-              <SelectValue placeholder="Roles" />
+              <SelectValue placeholder={role} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="light">Admin</SelectItem>
-              <SelectItem value="dark">User</SelectItem>
+              <SelectItem value="admin">Admin</SelectItem>
+              <SelectItem value="user">Applicant</SelectItem>
               <SelectItem value="system">Employer</SelectItem>
             </SelectContent>
           </Select>
@@ -84,10 +81,8 @@ const EditDialog = ({name,email}:EditUser) => {
 }
 
 const UserManagement = () => {
-  const [users, setUsers] = useState<User[]>(initialUsers);
   const session= useSession().data;
   const {data, error} = useSWR(['http://localhost:1337/api/users?populate=role', session?.user.jwt], fetcher);
-
   if (error) {
     return (
       <Layout>
@@ -121,12 +116,12 @@ const UserManagement = () => {
             </tr>
             </thead>
             <tbody>
-            {users.map((user) => (
+            {data?.map((user) => (
               <tr key={user.id} className="border-t border-gray-200">
                 <td className="px-4 py-2">{user.id}</td>
                 <td className="px-4 py-2">{user.username}</td>
                 <td className="px-4 py-2">{user.email}</td>
-                <td className="px-4 py-2">{user.role}</td>
+                <td className="px-4 py-2">{user.role.name}</td>
                 <td className="px-4 py-2">
                   <Dialog>
                     <DialogTrigger>
@@ -135,7 +130,7 @@ const UserManagement = () => {
                       </Button>
                     </DialogTrigger>
 
-                    <EditDialog name={user.username} email={user.email}/>
+                    <EditDialog name={user.username} email={user.email} role={user.role.name}/>
                   </Dialog>
                   <AlertDialog>
                     <AlertDialogTrigger >
