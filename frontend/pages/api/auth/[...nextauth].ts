@@ -6,7 +6,7 @@ interface CredentialsWithPassword extends Record<any, any> {
   password: string;
 }
 
-const options: NextAuthOptions = {
+export const options: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',

@@ -4,6 +4,9 @@ interface SiteConfig {
   name: string
   description: string
   mainNav: NavItem[]
+  userNav: NavItem[]
+  adminNav: NavItem[]
+  companyNav: NavItem[]
   links: {
     twitter: string
     github: string
@@ -16,6 +19,12 @@ export const siteConfig: SiteConfig = {
   description:
     "Beautifully designed components built with Radix UI and Tailwind CSS.",
   mainNav: [
+    {
+      title: "Home",
+      href: "/",
+    },
+  ],
+  adminNav: [
     {
       title: "Home",
       href: "/",
@@ -35,6 +44,20 @@ export const siteConfig: SiteConfig = {
     {
       title: "Admin",
       href: "/admin/dashboard",
+    },
+  ],
+  userNav: [
+    {
+      title: "Home",
+      href: "/",
+    },
+    {
+      title: "Jobs",
+      href: "/browse",
+    },
+    {
+      title: "Company",
+      href: "/company",
     },
   ],
   links: {

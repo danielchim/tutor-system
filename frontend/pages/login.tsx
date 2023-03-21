@@ -17,7 +17,7 @@ const Login: React.FC = () => {
     const result = await signIn("credentials", {
       email,
       password,
-      redirect: false,
+      callbackUrl: `/`
     });
 
     if (result?.error) {

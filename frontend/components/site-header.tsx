@@ -6,9 +6,12 @@ import {MainNav} from "@/components/main-nav"
 import {ThemeToggle} from "@/components/theme-toggle"
 import {buttonVariants} from "@/components/ui/button"
 import {Button} from "@/components/ui/button"
+import {useSession} from "next-auth/react";
 
 
 export function SiteHeader() {
+  const { data: session } = useSession()
+
   return (
     <header
       className="sticky top-0 z-40 w-full border-b border-b-slate-200 bg-white dark:border-b-slate-700 dark:bg-slate-900">
@@ -49,11 +52,19 @@ export function SiteHeader() {
               </div>
             </Link>
             <ThemeToggle/>
-            <Link href={"/login"}>
-              <Button>
-                Log in
-              </Button>
-            </Link>
+            {
+              session?(
+                  <Button>
+                    <Link href={"/api/auth/signout"}>Sign out</Link>
+                  </Button>
+              ):(
+                <>
+                  <Button>
+                    <Link href={"/login"}>Log in</Link>
+                  </Button>
+                </>
+              )
+            }
           </nav>
         </div>
       </div>
