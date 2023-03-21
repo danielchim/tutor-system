@@ -60,6 +60,28 @@ export const siteConfig: SiteConfig = {
       href: "/company",
     },
   ],
+  companyNav: [
+    {
+      title: "Home",
+      href: "/",
+    },
+    {
+      title: "Jobs",
+      href: "/browse",
+    },
+    {
+      title: "Employer zone",
+      href: "/user",
+    },
+    {
+      title: "Company",
+      href: "/company",
+    },
+    {
+      title: "Admin",
+      href: "/admin/dashboard",
+    },
+  ],
   links: {
     twitter: "https://twitter.com/neverwin",
     github: "https://github.com/danielchim/tutor-system",
