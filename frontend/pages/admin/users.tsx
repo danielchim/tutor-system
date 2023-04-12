@@ -138,7 +138,7 @@ const UserManagement = () => {
                         Delete
                       </Button>
                     </AlertDialogTrigger>
-                    <DeleteWarn />
+                    <DeleteWarn onClickUrl={`http://localhost:1337/api/users/${user.id}`}/>
                   </AlertDialog>
                 </td>
               </tr>

@@ -10,7 +10,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
-const DeleteWarn = () => {
+const DeleteWarn = ({onClickUrl}) => {
+
+  const onClickAction = () => {
+
+  }
   return (
 
     <AlertDialogContent>

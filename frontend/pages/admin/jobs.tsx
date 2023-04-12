@@ -77,7 +77,7 @@ const EditDialog = ({name,company,employer}:EditJob) => {
 
 const JobsManagement = () => {
   const session= useSession().data;
-  const {data, error} = useSWR(['http://localhost:1337/api/jobs?populate=company,employer', session?.user.jwt], fetcher);
+  const {data, error} = useSWR(['http://localhost:8080/api/jobs/'], fetcher);
   if (error) {
     return (
       <Layout>
