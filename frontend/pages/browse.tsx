@@ -174,7 +174,7 @@ const Browse = () => {
                   }) : <></>}
                   <br/>
                   <button
-                    onClick={() => {applyJob('userID', 'jobID')}
+                    onClick={() => {applyJob('userID', 'jobID')}}
                     className='bg-black text-white rounded-md px-4 py-2 mt-4 duration-200 hover:shadow-md '>Apply
                   </button>
                 </div>
