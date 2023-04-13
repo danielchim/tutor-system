@@ -1,12 +1,18 @@
 package com.com2202.assigment.dto;
 
+import com.com2202.assigment.entity.Employer;
+import com.com2202.assigment.entity.Jobs;
+import com.com2202.assigment.entity.User;
+
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class InterviewInput {
+
     private LocalDateTime date;
-    private int userId;
-    private int jobId;
-    private int employerId;
+    private User user;
+    private Jobs job;
+    private Employer employer;
 
     public LocalDateTime getDate() {
         return date;
@@ -16,28 +22,28 @@ public class InterviewInput {
         this.date = date;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public int getJobId() {
-        return jobId;
+    public Jobs getJob() {
+        return job;
     }
 
-    public void setJobId(int jobId) {
-        this.jobId = jobId;
+    public void setJob(Jobs job) {
+        this.job = job;
     }
 
-    public int getEmployerId() {
-        return employerId;
+    public Employer getEmployer() {
+        return employer;
     }
 
-    public void setEmployerId(int employerId) {
-        this.employerId = employerId;
+    public void setEmployer(Employer employer) {
+        this.employer = employer;
     }
 }
 
