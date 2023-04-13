@@ -19,6 +19,7 @@ import {SelectContent, SelectItem, SelectTrigger} from "@/components/ui/select";
 import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
 import {useSession} from "next-auth/react";
+import Chip from "@/components/ui/chip";
 
 type EditCompany = {
   name:string
@@ -75,7 +76,7 @@ const EditDialog = ({name,owner,status}:EditCompany) => {
 
 const CompanyManagement = () => {
   const session= useSession().data;
-  const {data, error} = useSWR(['http://localhost:1337/api/companies?populate=users_permissions_user,', session?.user.jwt], fetcher);
+  const {data, error} = useSWR(['http://localhost:8080/api/companies/'], fetcher);
   console.log(data)
   if (error) {
     return (
@@ -112,34 +113,36 @@ const CompanyManagement = () => {
             </thead>
 
             <tbody>
-            {/*{data.map((company) => (*/}
-            {/*  <tr key={company.id} className="border-t border-gray-200">*/}
-            {/*    <td className="px-4 py-2">{company.id}</td>*/}
-            {/*    <td className="px-4 py-2">{company.name}</td>*/}
-            {/*    <td className="px-4 py-2">{company.owner}</td>*/}
-            {/*    <td className="px-4 py-2">{company.registrationDate}</td>*/}
-            {/*    <td className="px-4 py-2">{company.status}</td>*/}
-            {/*    <td className="px-4 py-2">*/}
-            {/*      <Dialog>*/}
-            {/*        <DialogTrigger>*/}
-            {/*          <Button>*/}
-            {/*            Edit*/}
-            {/*          </Button>*/}
-            {/*        </DialogTrigger>*/}
+            {data?.map((company) => (
+              <tr key={company.id} className="border-t border-gray-200">
+                <td className="px-4 py-2">{company.id}</td>
+                <td className="px-4 py-2">{company.name}</td>
+                <td className="px-4 py-2">{company.owner.name}</td>
+                <td className="px-4 py-2">{company.createdAt}</td>
+                <td className="px-4 py-2">
+                  <Chip label={company.status === true ? 'Approved' : company.status === false ? 'Rejected' : 'Pending'} color={company.status === true ? 'green' : company.status === false ? 'red' : 'yellow'} />
+                </td>
+                <td className="px-4 py-2">
+                  <Dialog>
+                    <DialogTrigger>
+                      <Button>
+                        Edit
+                      </Button>
+                    </DialogTrigger>
 
-            {/*        <EditDialog name={company.name} owner={company.owner} status={company.status}/>*/}
-            {/*      </Dialog>*/}
-            {/*      <AlertDialog>*/}
-            {/*        <AlertDialogTrigger >*/}
-            {/*          <Button variant="destructive">*/}
-            {/*            Delete*/}
-            {/*          </Button>*/}
-            {/*        </AlertDialogTrigger>*/}
-            {/*        <DeleteWarn />*/}
-            {/*      </AlertDialog>*/}
-            {/*    </td>*/}
-            {/*  </tr>*/}
-            {/*))}*/}
+                    <EditDialog name={company.name} owner={company.owner.name} status={company.status}/>
+                  </Dialog>
+                  <AlertDialog>
+                    <AlertDialogTrigger >
+                      <Button variant="destructive">
+                        Delete
+                      </Button>
+                    </AlertDialogTrigger>
+                    <DeleteWarn />
+                  </AlertDialog>
+                </td>
+              </tr>
+            ))}
             </tbody>
 
           </table>

@@ -82,7 +82,8 @@ const EditDialog = ({name,email,role}:EditUser) => {
 
 const UserManagement = () => {
   const session= useSession().data;
-  const {data, error} = useSWR(['http://localhost:1337/api/users?populate=role', session?.user.jwt], fetcher);
+  const {data, error} = useSWR(['http://localhost:8080/api/users/'],fetcher);
+  console.log(data)
   if (error) {
     return (
       <Layout>
@@ -119,7 +120,7 @@ const UserManagement = () => {
             {data?.map((user) => (
               <tr key={user.id} className="border-t border-gray-200">
                 <td className="px-4 py-2">{user.id}</td>
-                <td className="px-4 py-2">{user.username}</td>
+                <td className="px-4 py-2">{user.name}</td>
                 <td className="px-4 py-2">{user.email}</td>
                 <td className="px-4 py-2">{user.role.name}</td>
                 <td className="px-4 py-2">

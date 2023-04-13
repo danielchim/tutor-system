@@ -20,7 +20,8 @@ const Browse = () => {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
   const session= useSession().data;
-  const {data, error} = useSWR(['http://localhost:1337/api/jobs?populate=company', session?.user.jwt], fetcher);
+  const {data, error} = useSWR(['http://localhost:8080/api/jobs/'], fetcher);
+  console.log(data)
 
   if (error) {
     return (
@@ -31,15 +32,12 @@ const Browse = () => {
       </Layout>
     )
   }
-  const jobs = data?.data.map((job: any) => {
-    const {id, attributes} = job;
+  const jobs = data?.map((job: any) => {
     return {
-      id,
-      title: attributes.name,
-      company: attributes.company.data.attributes.name,
-      location: attributes.location,
-      salary: attributes.salary,
-      description: attributes.description
+      id:job.idJobs,
+      title: job.name,
+      company: job.company.name,
+      description: job.description
     };
   });
 
@@ -71,8 +69,6 @@ const Browse = () => {
                   >
                     <h3 className="text-lg font-medium mb-2">{job.title}</h3>
                     <p className="text-gray-700">{job.company}</p>
-                    <p className="text-gray-700">{job.location}</p>
-                    <p className="text-gray-700">{job.salary}</p>
                   </div>
                 </>
 
@@ -83,8 +79,6 @@ const Browse = () => {
                 <div className="bg-white rounded-lg shadow py-6 px-8">
                   <h3 className="text-2xl font-medium mb-2">{selectedJob.title}</h3>
                   <p className="text-gray-700 mb-2">{selectedJob.company}</p>
-                  <p className="text-gray-700 mb-2">{selectedJob.location}</p>
-                  <p className="text-gray-700 mb-2">{selectedJob.salary}</p>
                   <p className="text-gray-700 mb-2">{selectedJob.description}</p>
                 </div>
               ):(

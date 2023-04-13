@@ -30,7 +30,6 @@ type EditJob = {
 }
 
 const EditDialog = ({name,company,employer}:EditJob) => {
-  console.log(name.name)
   return(
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
@@ -78,6 +77,7 @@ const EditDialog = ({name,company,employer}:EditJob) => {
 const JobsManagement = () => {
   const session= useSession().data;
   const {data, error} = useSWR(['http://localhost:8080/api/jobs/'], fetcher);
+  console.log(data)
   if (error) {
     return (
       <Layout>
@@ -111,12 +111,12 @@ const JobsManagement = () => {
             </tr>
             </thead>
             <tbody>
-            {data?.data?.map((job) => (
+            {data?.map((job) => (
               <tr key={job.id} className="border-t border-gray-200">
-                <td className="px-4 py-2">{job.id}</td>
-                <td className="px-4 py-2">{job.attributes.name}</td>
-                <td className="px-4 py-2">{job.attributes.company.data.attributes.name}</td>
-                <td className="px-4 py-2">{job.attributes.employer.data.attributes.name}</td>
+                <td className="px-4 py-2">{job.idjobs}</td>
+                <td className="px-4 py-2">{job.name}</td>
+                <td className="px-4 py-2">{job.company.name}</td>
+                <td className="px-4 py-2">{job.employer.user.name}</td>
                 <td className="px-4 py-2">
                   <Dialog>
                     <DialogTrigger>
@@ -124,7 +124,7 @@ const JobsManagement = () => {
                         Edit
                       </Button>
                     </DialogTrigger>
-                    <EditDialog name={job.attributes.name} company={job.attributes.company.data.attributes.name} employer={job.attributes.employer.data.attributes.name}/>
+                    <EditDialog name={job.name} company={job.company.name} employer={job.employer.user.name}/>
                   </Dialog>
                   <AlertDialog>
                     <AlertDialogTrigger >

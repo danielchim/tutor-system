@@ -16,11 +16,11 @@ export const options: NextAuthOptions = {
       },
       async authorize(credentials: CredentialsWithPassword, req) {
         const loginData = {
-          identifier: credentials.email,
+          email: credentials.email,
           password:  credentials.password
         }
 
-        const res = await fetch("http://localhost:1337/api/auth/local", {
+        const res = await fetch("http://localhost:8080/api/auth/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -29,6 +29,7 @@ export const options: NextAuthOptions = {
         });
 
         const user = await res.json();
+        console.log(user)
         // If no error and we have user data, return it
         if (res.ok && user) {
           return user;
