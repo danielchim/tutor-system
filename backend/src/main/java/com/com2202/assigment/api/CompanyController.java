@@ -1,6 +1,7 @@
 package com.com2202.assigment.api;
 
 import com.com2202.assigment.dto.AuthInput;
+import com.com2202.assigment.dto.CompanyInput;
 import com.com2202.assigment.entity.Company;
 import com.com2202.assigment.entity.Skills;
 import com.com2202.assigment.services.CompanyService;
@@ -25,6 +26,31 @@ public class CompanyController {
         // boolean isValid = userService.auth(input);
 
         return companyService.getAllCompanies();
+    }
+
+    @GetMapping("/{id}")
+    public Company getAllCompanies(@PathVariable int id) {
+
+        // Check if email and password are valid
+        // boolean isValid = userService.auth(input);
+
+        return companyService.getCompanyById(id);
+    }
+
+    @PostMapping("/")
+    public boolean createCompany(@RequestBody CompanyInput companyInput) {
+        return companyService.createCompany(companyInput);
+    }
+
+    @PostMapping("/{id}")
+    public boolean updateCompany(@PathVariable int id, @RequestBody CompanyInput companyInput) {
+        return companyService.updateCompany(id, companyInput);
+    }
+
+    @PostMapping("/{id}/delete")
+    public boolean deleteCompany(@PathVariable int id) {
+        return companyService.deleteCompany(id);
+
     }
 
 }

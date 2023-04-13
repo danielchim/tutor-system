@@ -120,7 +120,7 @@ const CompanyManagement = () => {
                 <td className="px-4 py-2">{company.owner.name}</td>
                 <td className="px-4 py-2">{company.createdAt}</td>
                 <td className="px-4 py-2">
-                  <Chip label={company.status === true ? 'Approved' : company.status === false ? 'Rejected' : 'Pending'} color={company.status === true ? 'green' : company.status === false ? 'red' : 'yellow'} />
+                  <Chip label={company.status === true ? 'Approved' : company.status === false && !null ? 'Rejected' : 'Pending'} color={company.status === true ? 'green' : company.status === false ? 'red' : 'yellow'} />
                 </td>
                 <td className="px-4 py-2">
                   <Dialog>
@@ -129,7 +129,6 @@ const CompanyManagement = () => {
                         Edit
                       </Button>
                     </DialogTrigger>
-
                     <EditDialog name={company.name} owner={company.owner.name} status={company.status}/>
                   </Dialog>
                   <AlertDialog>
