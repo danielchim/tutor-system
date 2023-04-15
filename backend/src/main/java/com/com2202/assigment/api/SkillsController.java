@@ -38,12 +38,12 @@ public class SkillsController {
         return skillsService.getSkillsByName(decodedName);
     }
 
-    @GetMapping("{id}/count")
+    @GetMapping("/{id}/count")
     public int countJobsBySkill(@PathVariable int id) {
         return skillsService.countJobsBySkill(id);
     }
 
-    @GetMapping("{id}/jobs")
+    @GetMapping("/{id}/jobs")
     public List<Jobs> getJobsBySkills(@PathVariable int id) {
         return skillsService.getJobsBySkills(id);
     }
@@ -53,12 +53,12 @@ public class SkillsController {
         return skillsService.createSkills(skills);
     }
 
-    @PutMapping("/{id}")
+    @PostMapping("/{id}/update")
     public Skills updateSkills(@PathVariable int id, @RequestBody Skills skills) {
         return skillsService.updateSkills(id, skills);
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/{id}/delete")
     public void deleteSkills(@PathVariable int id) {
         skillsService.deleteSkills(id);
     }

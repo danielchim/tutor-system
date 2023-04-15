@@ -31,7 +31,7 @@ public class EmployerController {
         return employerService.saveEmployer(employer);
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/{id}/update")
     public boolean updateEmployer(@PathVariable int id, @RequestBody Employer employer) {
         Employer existingEmployer = employerService.getEmployerById(id);
         if (existingEmployer == null) {
@@ -42,7 +42,7 @@ public class EmployerController {
         return employerService.updateEmployer(existingEmployer);
     }
 
-    @PostMapping("/delete/{id}")
+    @PostMapping("/{id}/delete")
     public boolean deleteEmployerById(@PathVariable int id) {
         return employerService.deleteEmployerById(id);
     }

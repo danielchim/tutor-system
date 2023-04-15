@@ -28,7 +28,7 @@ public class InterviewController {
         return ResponseEntity.created(URI.create("/api/interviews/" + interview.getId())).body(interview);
     }
 
-    @PutMapping("/{interviewId}")
+    @PostMapping("/{interviewId}/update")
     public ResponseEntity<Interview> updateInterview(@PathVariable int interviewId, @RequestBody InterviewInput interviewInput) {
         Interview interview = interviewService.updateInterview(interviewId, interviewInput);
         return ResponseEntity.ok(interview);
@@ -45,7 +45,7 @@ public class InterviewController {
         return ResponseEntity.ok(interview);
     }
 
-    @DeleteMapping("/{interviewId}")
+    @PostMapping("/{interviewId}/delete")
     public ResponseEntity<Void> deleteInterview(@PathVariable int interviewId) {
         interviewService.deleteInterview(interviewId);
         return ResponseEntity.noContent().build();

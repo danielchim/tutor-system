@@ -62,7 +62,7 @@ public class JobController {
        return jobService.createJobHistory(job);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/update")
     public void updateJob(@PathVariable int id, @RequestBody JobInput job) {
         jobService.updateJob(id, job);
     }

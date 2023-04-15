@@ -37,7 +37,7 @@ public class RoleController {
         return roleService.saveRole(role);
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/{id}/update")
     public boolean updateRole(@PathVariable int id, @RequestBody Role role) {
         Role existingRole = roleService.getRoleById(id);
         if (existingRole == null) {
@@ -47,7 +47,7 @@ public class RoleController {
         return roleService.updateRole(existingRole);
     }
 
-    @PostMapping("/delete/{id}")
+    @PostMapping("/{id}/delete")
     public void deleteRoleById(@PathVariable int id) {
         roleService.deleteRoleById(id);
     }

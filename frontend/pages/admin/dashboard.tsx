@@ -51,7 +51,7 @@ const CompanyManagementWidget = ({ companies }) => {
   );
 };
 
-const JobManagementWidget: React.FC<Props> = ({ jobs }) => {
+const JobManagementWidget = ({ jobs }) => {
 
   return (
     <div className="rounded-lg p-6 shadow-lg">

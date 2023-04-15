@@ -60,7 +60,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/update")
     public boolean updateUser(@PathVariable int id, @RequestBody User user) {
         User existingUser = userService.getUserById(id);
         if (existingUser == null) {
@@ -73,13 +73,13 @@ public class UserController {
         return userService.updateUser(existingUser);
     }
 
-    @PostMapping("delete/{id}")
+    @PostMapping("/{id}/delete")
     public void deleteUserById(@PathVariable int id) {
         userService.deleteUser(id);
     }
 
     // other API endpoint methods
-    @GetMapping("{id}/history")
+    @GetMapping("/{id}/history")
     public List<JobHistory> getAllJobs(@PathVariable int id) {
         return jobService.getJobHistoryByUser(id);
     }

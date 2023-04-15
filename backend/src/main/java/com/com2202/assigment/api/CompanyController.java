@@ -43,7 +43,7 @@ public class CompanyController {
         return companyService.createCompany(companyInput);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/update")
     public boolean updateCompany(@PathVariable int id, @RequestBody CompanyInput companyInput) {
         return companyService.updateCompany(id, companyInput);
     }
