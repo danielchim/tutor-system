@@ -1,9 +1,6 @@
 const fetcher = async (url: string, token: string) => {
-  console.log(url[1])
-  const res = await fetch(url[0], {
-    headers: {
-      Authorization: `Bearer ${url[1]}`
-    }
+  const res = await fetch(url, {
+
   });
 
   if (!res.ok) {

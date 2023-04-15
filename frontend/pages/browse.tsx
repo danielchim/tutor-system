@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import fetcher from "@/lib/fetcher";
 import Link from "next/link";
 import {Input} from "@/components/ui/input";
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 
 interface Job {
@@ -61,7 +62,7 @@ const Browse = () => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body
+      body: body
     };
 
     try {
@@ -123,7 +124,6 @@ const Browse = () => {
 
   };
 
-
   return (
     <Layout>
       <section className="container grid items-start gap-6 pt-6 pb-8 md:py-10">
@@ -145,7 +145,7 @@ const Browse = () => {
         <p>There are {jobList.length} jobs searched.</p>
         <div className="flex flex-col gap-4">
           <div className="flex gap-4">
-            <div className="w-1/4">
+            <ScrollArea className="h-[200px] w-[350px]" className="w-1/4">
               {jobs?.map((job) => (
                 <>
                   <div
@@ -160,9 +160,8 @@ const Browse = () => {
                     }) : <></>}
                   </div>
                 </>
-
               ))}
-            </div>
+            </ScrollArea>
             <div className="w-3/4">
               {selectedJob ? (
                 <div className="bg-white rounded-lg shadow py-6 px-8">
@@ -174,7 +173,9 @@ const Browse = () => {
                   }) : <></>}
                   <br/>
                   <button
-                    onClick={() => {applyJob('userID', 'jobID')}}
+                    onClick={() => {
+                      applyJob('userID', 'jobID')
+                    }}
                     className='bg-black text-white rounded-md px-4 py-2 mt-4 duration-200 hover:shadow-md '>Apply
                   </button>
                 </div>

@@ -35,7 +35,7 @@ export const siteConfig: SiteConfig = {
     },
     {
       title: "Employer zone",
-      href: "/user",
+      href: "/employer",
     },
     {
       title: "Company",
@@ -71,15 +71,11 @@ export const siteConfig: SiteConfig = {
     },
     {
       title: "Employer zone",
-      href: "/user",
+      href: "/employer",
     },
     {
       title: "Company",
       href: "/company",
-    },
-    {
-      title: "Admin",
-      href: "/admin/dashboard",
     },
   ],
   links: {

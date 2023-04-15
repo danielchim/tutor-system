@@ -1,9 +1,12 @@
 import type { AppProps } from "next/app"
 import { Inter as FontSans } from "@next/font/google"
 import { ThemeProvider } from "next-themes"
-import { SessionProvider } from "next-auth/react"
+import {SessionProvider, useSession} from "next-auth/react"
 
 import "@/styles/globals.css"
+import useSWR from "swr";
+import fetcher from "@/lib/fetcher";
+import useStore from "@/hooks/useStore";
 
 const fontSans = FontSans({
   subsets: ["latin"],

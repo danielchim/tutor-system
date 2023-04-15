@@ -21,7 +21,7 @@ const AvatarToggle = () => {
             <span>Profile</span>
           </DropdownMenuItem>
         </Link>
-        <Link href={'/signout'}>
+        <Link href={'/api/auth/signout'}>
          <DropdownMenuItem>
             <Icons.logout className="mr-2 h-4 w-4" />
             <span>Log out</span>

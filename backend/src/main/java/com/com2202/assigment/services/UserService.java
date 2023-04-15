@@ -3,6 +3,7 @@ package com.com2202.assigment.services;
 import com.com2202.assigment.dto.AuthInput;
 import com.com2202.assigment.entity.Role;
 import com.com2202.assigment.entity.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -49,11 +50,15 @@ public class UserService {
         jdbcTemplate.update(sql, id);
     }
 
-    public boolean auth(AuthInput input) {
-        String sql = "SELECT COUNT(*) FROM user WHERE email = ? AND password = ?";
-        int count = jdbcTemplate.queryForObject(sql, Integer.class, input.getEmail(), input.getPassword());
-        return count > 0;
+    public User auth(AuthInput input) {
+        String sql = "SELECT u.*, r.name AS r_name FROM user u INNER JOIN role r ON u.Role_idRole = r.idRole WHERE email = ? AND password = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{input.getEmail(),input.getPassword()}, new UserRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
+
 
     static class UserRowMapper implements RowMapper<User> {
         @Override
@@ -62,7 +67,7 @@ public class UserService {
             user.setId(rs.getInt("idUser"));
             user.setName(rs.getString("name"));
             user.setEmail(rs.getString("email"));
-            user.setPassword(rs.getString("password"));
+            // user.setPassword(rs.getString("password"));
             user.setCreatedAt(rs.getDate("created_at"));
 
             Role role = new Role();

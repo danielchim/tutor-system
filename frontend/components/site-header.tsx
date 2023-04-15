@@ -9,10 +9,10 @@ import {Button} from "@/components/ui/button"
 import {useSession} from "next-auth/react";
 import AvatarToggle from "@/components/avatar-toggle";
 import React from "react";
+import useStore from "@/hooks/useStore";
 
 export function SiteHeader() {
   const { data: session } = useSession()
-
   return (
     <header
       className="sticky top-0 z-40 w-full border-b border-b-slate-200 bg-white dark:border-b-slate-700 dark:bg-slate-900">

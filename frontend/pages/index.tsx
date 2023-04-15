@@ -5,9 +5,12 @@ import { siteConfig } from "@/config/site"
 import { Layout } from "@/components/layout"
 import { buttonVariants } from "@/components/ui/button"
 import {useSession} from "next-auth/react";
+import useStore from "@/hooks/useStore";
+import {useEffect} from "react";
+import fetcher from "@/lib/fetcher";
+import useSWR from "swr";
 
 export default function IndexPage() {
-  console.log(useSession())
   return (
     <Layout>
       <Head>
