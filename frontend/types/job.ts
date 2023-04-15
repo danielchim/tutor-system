@@ -2,6 +2,7 @@ import Company from "@/types/company";
 import {Employer} from "@/types/employer";
 
 export type Job = {
+  idjobs: number;
   id: number;
   title: string;
   company: Company;
@@ -9,5 +10,4 @@ export type Job = {
   location: string;
   salary: string;
   description: string;
-  type: "full-time" | "part-time" | "contract" | "temporary" | "internship";
 };

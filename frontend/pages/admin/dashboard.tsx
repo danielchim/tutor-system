@@ -2,15 +2,17 @@ import React from 'react';
 import { Layout } from '@/components/layout';
 // TODO: consistent all imports to named import
 import  UserManagementWidget  from '@/components/admin/user-management'
-import {JobManagementWidget} from '@/components/admin/job-management'
+import JobManagementWidget from '@/components/admin/job-management'
 import CompanyManagementWidget from '@/components/admin/company-management';
-import {Job} from "@/types/job";
-import Company from "@/types/company";
-import {Employer} from "@/types/employer";
+import useSWR from "swr";
+import fetcher from "@/lib/fetcher";
 
 
 
 const AdminDashboard = () => {
+  const {data:jobData, error:jobError} = useSWR(['http://localhost:8080/api/jobs/'], fetcher);
+  const {data:userData, error:userError} = useSWR(['http://localhost:8080/api/users/'], fetcher);
+  const {data:companyData, error:companyError} = useSWR(['http://localhost:8080/api/companies/'], fetcher);
   return (
     <Layout>
       <div className="container items-center">
@@ -21,13 +23,13 @@ const AdminDashboard = () => {
         </div>
 
         <div className="w-full p-4">
-          <UserManagementWidget />
+          <UserManagementWidget users={userData}/>
         </div>
         <div className="w-full p-4">
-          <JobManagementWidget  jobs={null}/>
+          <JobManagementWidget jobs={jobData}/>
         </div>
         <div className="w-full p-4">
-          <CompanyManagementWidget  companies={null}/>
+          <CompanyManagementWidget  companies={companyData}/>
         </div>
       </div>
     </Layout>

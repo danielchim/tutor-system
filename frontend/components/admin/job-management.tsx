@@ -7,7 +7,7 @@ interface Props {
   jobs: Job[];
 }
 
-export const JobManagementWidget: React.FC<Props> = ({ jobs }) => {
+const JobManagementWidget: React.FC<Props> = ({ jobs }) => {
 
   return (
     <div className="rounded-lg p-6 shadow-lg">
@@ -32,12 +32,12 @@ export const JobManagementWidget: React.FC<Props> = ({ jobs }) => {
           </tr>
           </thead>
           <tbody>
-          {jobs.map((job) => (
-            <tr key={job.id} className="border-t border-gray-200">
-              <td className="px-4 py-2">{job.title}</td>
-              <td className="px-4 py-2">{job.title}</td>
+          {jobs?.map((job) => (
+            <tr key={job.idjobs} className="border-t border-gray-200">
+              <td className="px-4 py-2">{job.idjobs}</td>
+              <td className="px-4 py-2">{job.name}</td>
               <td className="px-4 py-2">{job.company.name}</td>
-              <td className="px-4 py-2">{job.employer.name}</td>
+              <td className="px-4 py-2">{job.employer.user.name}</td>
             </tr>
           ))}
           </tbody>
@@ -46,3 +46,5 @@ export const JobManagementWidget: React.FC<Props> = ({ jobs }) => {
     </div>
   );
 };
+
+export default JobManagementWidget;

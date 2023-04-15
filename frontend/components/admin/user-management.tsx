@@ -7,13 +7,7 @@ interface User {
   role: 'employer' | 'company owner' | 'job applicant';
 }
 
-const users: User[] = [
-  { id: 1, username: 'John', email: 'john@example.com', role: 'employer' },
-  { id: 2, username: 'Jane', email: 'jane@example.com', role: 'company owner' },
-  { id: 3, username: 'Mike', email: 'mike@example.com', role: 'job applicant' },
-];
-
-const UserManagementWidget = () => {
+const UserManagementWidget = ({users}) => {
   return (
     <div className="shadow-md rounded-lg p-4">
       <div className="flex justify-between items-center mb-4">
@@ -38,14 +32,14 @@ const UserManagementWidget = () => {
           </tr>
           </thead>
           <tbody>
-          {users.map((user) => (
-            <tr key={user.id} className="border-t border-gray-200">
-              <td className="px-4 py-2">{user.username}</td>
-              <td className="px-4 py-2">{user.username}</td>
-              <td className="px-4 py-2">{user.email}</td>
-              <td className="px-4 py-2">{user.role}</td>
-            </tr>
-          ))}
+          {users?.map(user => (
+              <tr key={user.id} className="border-t border-gray-200">
+                <td className="px-4 py-2">{user.id}</td>
+                <td className="px-4 py-2">{user.name}</td>
+                <td className="px-4 py-2">{user.email}</td>
+                <td className="px-4 py-2">{user.role.name}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

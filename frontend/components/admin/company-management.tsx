@@ -10,18 +10,14 @@ interface Company {
   status: string;
 }
 
-const CompanyManagementWidget = ({ companies }: { companies: Company[] }) => {
-  const [showAll, setShowAll] = useState(false);
-
-  const visibleCompanies = showAll ? companies : companies.slice(0, 5);
-
+const CompanyManagementWidget = ({ companies }) => {
+  console.log(companies)
   return (
     <div className="rounded-lg shadow p-4">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-medium">Company Management</h3>
         <Link href={"/admin/companies"}>
           <button
-            onClick={() => setShowAll(!showAll)}
             className="text-blue-500 hover:text-blue-700 focus:outline-none"
           >
             Show more
@@ -41,14 +37,14 @@ const CompanyManagementWidget = ({ companies }: { companies: Company[] }) => {
           </tr>
           </thead>
           <tbody>
-          {visibleCompanies.map((company) => (
+          {companies?.map((company) => (
             <tr key={company.id} className="border-t border-gray-200">
               <td className="px-4 py-2">{company.id}</td>
               <td className="px-4 py-2">{company.name}</td>
-              <td className="px-4 py-2">{company.owner}</td>
-              <td className="px-4 py-2">{company.registrationDate}</td>
+              <td className="px-4 py-2">{company.owner.name}</td>
+              <td className="px-4 py-2">{company.createdAt}</td>
               <td className="px-4 py-2">
-                <Chip label={company.status} color={company.status === 'approved' ? 'green' : company.status === 'rejected' ? 'red' : 'yellow'} />
+                <Chip label={company.status? 'Approved' : 'Rejected'} color={company.status? 'green' : 'red'} />
               </td>
             </tr>
           ))}
