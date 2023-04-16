@@ -5,6 +5,7 @@ import com.com2202.assigment.dto.CompanyInput;
 import com.com2202.assigment.dto.InterviewInput;
 import com.com2202.assigment.entity.Company;
 import com.com2202.assigment.entity.Interview;
+import com.com2202.assigment.entity.Jobs;
 import com.com2202.assigment.entity.Skills;
 import com.com2202.assigment.services.CompanyService;
 import com.com2202.assigment.services.InterviewService;
@@ -22,6 +23,22 @@ public class InterviewController {
     @Autowired
     private InterviewService interviewService;
 
+    @GetMapping("/")
+    public List<Interview> getAllInterviews() {
+        return interviewService.getAllInterviews();
+    }
+
+    @GetMapping("/{interviewId}")
+    public ResponseEntity<Interview> getInterviewById(@PathVariable int interviewId) {
+        Interview interview = interviewService.getInterviewById(interviewId);
+        return ResponseEntity.ok(interview);
+    }
+
+    @GetMapping("/{id}/interviews")
+    public List<Interview> getInterviewByUserId(@PathVariable int id, @RequestParam(value = "employerUserId", required = false) Integer employerUserId) {
+        return interviewService.getInterviewByUserId(id, employerUserId);
+    }
+
     @PostMapping("/")
     public ResponseEntity<Interview> createInterview(@RequestBody InterviewInput interviewInput) {
         Interview interview = interviewService.createInterview(interviewInput);
@@ -31,17 +48,6 @@ public class InterviewController {
     @PostMapping("/{interviewId}/update")
     public ResponseEntity<Interview> updateInterview(@PathVariable int interviewId, @RequestBody InterviewInput interviewInput) {
         Interview interview = interviewService.updateInterview(interviewId, interviewInput);
-        return ResponseEntity.ok(interview);
-    }
-
-    @GetMapping("/")
-    public List<Interview> getAllInterviews() {
-        return interviewService.getAllInterviews();
-    }
-
-    @GetMapping("/{interviewId}")
-    public ResponseEntity<Interview> getInterviewById(@PathVariable int interviewId) {
-        Interview interview = interviewService.getInterviewById(interviewId);
         return ResponseEntity.ok(interview);
     }
 

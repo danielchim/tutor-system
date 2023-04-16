@@ -9,10 +9,19 @@ declare module "next-auth" {
       name: string;
       id: string;
       email: string;
-      role:{
-        id:number,
-        name:string
+      role: {
+        id: number,
+        name: string
       }
+    }
+  }
+  interface AdapterUser {
+    name: string;
+    id: string;
+    email: string;
+    role: {
+      id: number,
+      name: string
     }
   }
 }

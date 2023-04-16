@@ -1,17 +1,18 @@
-import React from 'react';
-import { Layout } from '@/components/layout';
+import React, {useEffect, useState} from 'react';
+import {Layout} from '@/components/layout';
 // TODO: consistent all imports to named import
 import {Job} from "@/types/job";
 import Company from "@/types/company";
 import Link from "next/link";
 import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
+import {useSession} from "next-auth/react";
 
 
 const jobs: Job[] = []
 
 
-const companies:Company[] = [
+const companies: Company[] = [
   {
     id: 1,
     name: 'Acme Inc.',
@@ -35,7 +36,7 @@ const companies:Company[] = [
   }
 ]
 
-const JobManagementWidget = ({ jobs }) => {
+const JobManagementWidget = ({jobs}) => {
 
   return (
     <div className="rounded-lg p-6 shadow-lg">
@@ -55,6 +56,7 @@ const JobManagementWidget = ({ jobs }) => {
           <tr className="text-left text-gray-500">
             <th className="px-4 py-2">#</th>
             <th className="px-4 py-2">Job Name</th>
+            <th className="px-4 py-2">Create Date</th>
           </tr>
           </thead>
           <tbody>
@@ -62,8 +64,7 @@ const JobManagementWidget = ({ jobs }) => {
             <tr key={job.idjobs} className="border-t border-gray-200">
               <td className="px-4 py-2">{job.idjobs}</td>
               <td className="px-4 py-2">{job.name}</td>
-              <td className="px-4 py-2">{job.company.name}</td>
-              <td className="px-4 py-2">{job.employer.user.name}</td>
+              <td className="px-4 py-2">{job.created_at}</td>
             </tr>
           ))}
           </tbody>
@@ -73,7 +74,7 @@ const JobManagementWidget = ({ jobs }) => {
   );
 };
 
-const InterviewManagementWidget = ({ jobs }) => {
+const InterviewManagementWidget = ({interviews}) => {
 
   return (
     <div className="rounded-lg p-6 shadow-lg">
@@ -98,14 +99,19 @@ const InterviewManagementWidget = ({ jobs }) => {
           </tr>
           </thead>
           <tbody>
-          {jobs?.map((job) => (
-            <tr key={job.idjobs} className="border-t border-gray-200">
-              <td className="px-4 py-2">{job.idjobs}</td>
-              <td className="px-4 py-2">{job.name}</td>
-              <td className="px-4 py-2">{job.company.name}</td>
-              <td className="px-4 py-2">{job.employer.user.name}</td>
-            </tr>
-          ))}
+          {interviews?.map((interview) => {
+            const date = new Date(interview.date);
+            const localDateString = date.toLocaleString();
+              return (
+                <tr key={interview.id} className="border-t border-gray-200">
+                  <td className="px-4 py-2">{interview.id}</td>
+                  <td className="px-4 py-2">{interview.job.name}</td>
+                  <td className="px-4 py-2">{interview.user.name}</td>
+                  <td className="px-4 py-2">{localDateString}</td>
+                </tr>
+              )
+            }
+          )}
           </tbody>
         </table>
       </div>
@@ -114,7 +120,31 @@ const InterviewManagementWidget = ({ jobs }) => {
 };
 
 const EmployerDashboard = () => {
-  const {data:jobData, error:jobError} = useSWR(['http://localhost:8080/api/jobs/'], fetcher);
+  const session = useSession();
+  const [userData, setUserData] = useState(null);
+  useEffect(() => {
+    if (session.status === 'authenticated') {
+      const roleId = session.data.user;
+      setUserData(roleId)
+    }
+  }, [session])
+  const body = {
+    // your JSON data here
+    user: {
+      id: userData?.id
+    }
+  }
+  const {
+    data: jobData,
+    isLoading: jobDataIsLoading,
+    error: jobError
+  } = useSWR([userData ? `http://localhost:8080/api/employers/${userData?.id}/jobs` : null], fetcher);
+  const {
+    data: interviewData,
+    isLoading: interviewDataIsLoading,
+    error: interviewDataError
+  } = useSWR([userData ? `http://localhost:8080/api/interviews/${userData?.id}/interviews?employerUserId=${userData?.id}` : null], fetcher);
+  console.log(interviewData);
   return (
     <Layout>
       <div className="container items-center">
@@ -124,10 +154,10 @@ const EmployerDashboard = () => {
           </h1>
         </div>
         <div className="w-full p-4">
-          <InterviewManagementWidget jobs={jobs}/>
+          <InterviewManagementWidget interviews={interviewData}/>
         </div>
         <div className="w-full p-4">
-          <JobManagementWidget jobs={jobs}/>
+          <JobManagementWidget jobs={jobData}/>
         </div>
       </div>
     </Layout>

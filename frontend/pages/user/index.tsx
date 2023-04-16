@@ -116,8 +116,7 @@ const Dashboard = () => {
     }
   },[session])
   const [selectedJobApplication, setSelectedJobApplication] = useState<JobApplication | null>(null);
-  const {data, isLoading} = useSWR([`http://localhost:8080/api/users/${userData?.id}/history`],fetcher)
-  console.log(data)
+  const {data, isLoading} = useSWR([userData?`http://localhost:8080/api/users/${userData?.id}/history`:null],fetcher)
   return (
     <Layout>
       <div className="container mx-auto py-6">
@@ -178,9 +177,9 @@ const Dashboard = () => {
             <h2 className="text-2xl font-bold mb-4">Job Application Details</h2>
             {selectedJobApplication ? (
               <>
-                <h3 className="text-lg font-medium">{selectedJobApplication.job.name}</h3>
-                <p className="text-gray-600">{selectedJobApplication.job.company.name} - {selectedJobApplication.job.employer.user.name}</p>
-                <p className="text-sm text-gray-600">Applied at {selectedJobApplication.applyDate}</p>
+                {/*<h3 className="text-lg font-medium">{selectedJobApplication.job.name}</h3>*/}
+                {/*<p className="text-gray-600">{selectedJobApplication.job.company.name} - {selectedJobApplication.job.employer.user.name}</p>*/}
+                {/*<p className="text-sm text-gray-600">Applied at {selectedJobApplication.applyDate}</p>*/}
               </>
             ) : (
               <p className="text-gray-600">Please select a job application from the list to view details.</p>

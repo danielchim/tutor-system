@@ -144,6 +144,30 @@ public class InterviewService {
         return result == 1;
     }
 
+    public List<Interview> getInterviewByUserId(int id, Integer employerUserId) {
+        String sql = "SELECT i.*, j.name AS job_name, u.name AS employer_name FROM interview i " +
+                "JOIN jobs j ON i.jobs_idjobs = j.idjobs " +
+                "JOIN employer e ON i.Employer_idEmployer = e.idEmployer " +
+                "JOIN user u ON e.User_idUser = u.idUser ";
+
+        if (employerUserId == null) {
+            sql += "WHERE i.User_idUser = ?";
+            List<Interview> interviews = jdbcTemplate.query(sql, new InterviewRowMapper(), id);
+            if (interviews.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No interviews found");
+            }
+            return interviews;
+        } else {
+            sql += "WHERE e.User_idUser = ?";
+            List<Interview> interviews = jdbcTemplate.query(sql, new InterviewRowMapper(), employerUserId);
+            if (interviews.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No interviews found");
+            }
+            return interviews;
+        }
+    }
+
+
     private static class InterviewRowMapper implements RowMapper<Interview> {
         @Override
         public Interview mapRow(ResultSet rs, int rowNum) throws SQLException {

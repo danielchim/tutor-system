@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,12 +44,8 @@ public class EmployerService {
     }
 
     public List<Jobs> getJobsByEmployerId(int id) {
-        String sql = "SELECT e.*, c.name AS c_name, u.name AS u_name "
-                + "FROM employer e "
-                + "JOIN company c ON e.Company_idCompany = c.idCompany "
-                + "JOIN user u ON e.User_idUser = u.idUser "
-                + "WHERE u.idUser = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, new EmployerRowMapper());
+        String sql = "SELECT j.* FROM jobs j JOIN employer e ON j.Employer_idEmployer = e.idEmployer JOIN user u ON e.User_idUser = u.idUser WHERE u.idUser = ?";
+        return jdbcTemplate.query(sql, new Object[]{id}, new JobRowMapper());
     }
 
     // TODO: fix idEmployer to be set by database
@@ -87,6 +84,19 @@ public class EmployerService {
             employer.setCompany(company);
 
             return employer;
+        }
+    }
+
+   static class JobRowMapper implements RowMapper<Jobs> {
+        @Override
+        public Jobs mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Jobs job = new Jobs();
+            job.setIdjobs(rs.getInt("idjobs"));
+            job.setName(rs.getString("name"));
+            job.setCreated_at(rs.getDate("created_at"));
+
+
+            return job;
         }
     }
 }
