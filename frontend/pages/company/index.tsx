@@ -130,7 +130,7 @@ const CompanyDashboard = () => {
           <UserManagementWidget users={jobs}/>
         </div>
         <div className="w-full p-4">
-          <JobManagementWidget  jobs={jobs}/>
+          <JobManagementWidget jobs={jobs}/>
         </div>
       </div>
     </Layout>

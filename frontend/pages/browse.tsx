@@ -46,16 +46,17 @@ const useJobs = (options) => {
 
 
 const Browse = () => {
+  const {data:userInfo} = useSession();
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [searchJob, setSearchJob] = useState<string>('')
   const [jobList, setJobList] = useState([])
-  const [dateRange, setDateRange] = useState(null)
+  const [dateRange, setDateRange] = useState(["2022-01-01", "2023-06-01"]);
   const [queryString, setQueryString] = useState(null)
   const [searchSkillId, setSearchSkillId] = useState(null);
   const {data, error} = useJobs({
     searchByName: queryString,
     searchBySkill: searchSkillId,
-    searchByDateRange: dateRange
+    searchByDateRange: { startDate: dateRange[0], endDate: dateRange[1] }
   });
 
   useEffect(() => {
@@ -63,6 +64,8 @@ const Browse = () => {
   }, [data]);
 
   const handleSearch = (query) => {
+    setDateRange(["2022-01-01", "2023-06-01"])
+    setSearchSkillId(null)
     setQueryString(query)
   }
 
@@ -77,10 +80,10 @@ const Browse = () => {
   };
 
   const searchSkill = (idSkill) => {
+    setDateRange(["2022-01-01", "2023-06-01"])
     setSearchSkillId(idSkill);
+    setQueryString(null)
   };
-
-
   return (
     <Layout>
       <section className="container grid items-start gap-6 pt-6 pb-8 md:py-10">
@@ -104,11 +107,11 @@ const Browse = () => {
         <div className='flex flex-row gap-4'>
           <div className="grid w-full  items-center gap-1.5">
             <Label htmlFor="email">Start date</Label>
-            <Input type="date" value="2017-06-01"/>
+            <Input type="date" defaultValue={dateRange[0]}/>
           </div>
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="email">End date</Label>
-            <Input type="date" value="2017-06-01"/>
+            <Input type="date" defaultValue={dateRange[1]} onChange={(e) => dateRange === null? setDateRange(['2022-01-01', e.target.value]):setDateRange([...dateRange.slice(0, 1), e.target.value])}/>
           </div>
         </div>
         <p>There are {jobList.length} jobs searched.</p>
@@ -146,7 +149,7 @@ const Browse = () => {
                   <br/>
                   <button
                     onClick={() => {
-                      applyJob('userID', 'jobID');
+                      handleJobApply(userInfo.user.id);
                     }}
                     className="mt-4 rounded-md bg-black px-4 py-2 text-white duration-200 hover:shadow-md"
                   >

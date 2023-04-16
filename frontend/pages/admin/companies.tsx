@@ -137,7 +137,7 @@ const CompanyManagement = () => {
                         Delete
                       </Button>
                     </AlertDialogTrigger>
-                    <DeleteWarn />
+                    <DeleteWarn onClickUrl={`http://localhost:8080/api/jobs/${company.id}/delete`}/>
                   </AlertDialog>
                 </td>
               </tr>
