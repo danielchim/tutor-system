@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { Layout } from '@/components/layout';
 import {Button} from "@/components/ui/button"
-import useStore from "@/hooks/useStore";
-import {siteConfig} from "@/config/site";
+
 import {useSession} from "next-auth/react";
-import {session} from "next-auth/core/routes";
 import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
 import {
@@ -18,8 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
-import {Select, SelectValue} from "@radix-ui/react-select";
-import {SelectContent, SelectItem, SelectTrigger} from "@/components/ui/select";
+
 
 interface EditUser{
   id:number,
@@ -30,12 +27,31 @@ interface EditUser{
 
 interface JobApplication {
   id: number;
-  job: Object;
-  company: {
-    id:number,
-    name: string
-  };
+  job: Job;
+  company: Company;
   applyDate: Date;
+}
+
+interface Company {
+  id:number,
+  name: string
+}
+
+interface Job {
+  idjobs: number,
+  name: string,
+  company: Company
+  employer: Employer
+}
+
+interface Employer{
+  id: number
+  user:User
+}
+
+interface User{
+  id:number
+  name:string
 }
 
 const EditDialog = ({id,name,email,password}:EditUser) => {
@@ -59,9 +75,9 @@ const EditDialog = ({id,name,email,password}:EditUser) => {
         },
         body: JSON.stringify(bodyContent)
       });      if (response.ok) {
-        console.log("Account update successfully.");
+        alert("Account update successfully.");
       } else {
-        console.log("Failed to update account.");
+        alert("Failed to update account.");
       }
     } catch (error) {
       console.error(error);
@@ -110,7 +126,6 @@ const Dashboard = () => {
   const [userData, setUserData] = useState(null);
   useEffect(() => {
     if(session.status === 'authenticated'){
-      console.log(session.data.user)
       const roleId = session.data.user;
       setUserData(roleId)
     }
@@ -130,9 +145,7 @@ const Dashboard = () => {
             ):(
               <Dialog>
                 <DialogTrigger>
-                  <Button>
-                    Edit
-                  </Button>
+                  Edit
                 </DialogTrigger>
                 <EditDialog name={userData?.name} email={userData?.email}  id={userData?.id} password={userData?.password}/>
               </Dialog>
@@ -177,9 +190,9 @@ const Dashboard = () => {
             <h2 className="text-2xl font-bold mb-4">Job Application Details</h2>
             {selectedJobApplication ? (
               <>
-                {/*<h3 className="text-lg font-medium">{selectedJobApplication.job.name}</h3>*/}
-                {/*<p className="text-gray-600">{selectedJobApplication.job.company.name} - {selectedJobApplication.job.employer.user.name}</p>*/}
-                {/*<p className="text-sm text-gray-600">Applied at {selectedJobApplication.applyDate}</p>*/}
+                <h3 className="text-lg font-medium">{selectedJobApplication.job.name}</h3>
+                <p className="text-gray-600">{selectedJobApplication.job.company.name} - {selectedJobApplication.job.employer.user.name}</p>
+                <p className="text-sm text-gray-600">{`Applied at ${selectedJobApplication.applyDate}`}</p>
               </>
             ) : (
               <p className="text-gray-600">Please select a job application from the list to view details.</p>

@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import Image from "next/image";
-import logo from "../public/next.svg";
+import bg from "../public/bg.jpg";
+import {router} from "next/client";
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -9,7 +10,7 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const res = await fetch("/api/auth/signup", {
+    const res = await fetch("http://localhost:8080/api/users/", {
       body: JSON.stringify({
         email: email,
         password: password,
@@ -21,12 +22,8 @@ const Register: React.FC = () => {
       method: "POST",
     });
     if (res.ok) {
-      const data = await res.json();
-      // signIn("credentials", {
-      //   email: email,
-      //   password: password,
-      //   callbackUrl: `${window.location.origin}/dashboard`,
-      // });
+      alert("Account registered.")
+      router.push('/login')
     } else {
       console.error("An error occurred");
     }
@@ -36,10 +33,10 @@ const Register: React.FC = () => {
     <div className="flex h-screen">
       <div className="hidden md:block w-1/2 bg-gray-800">
         <Image
-          src={logo}
+          src={bg}
           alt="logo"
-          width={600}
-          height={600}
+          width={1920}
+          height={1080}
           objectFit="contain"
         />
       </div>

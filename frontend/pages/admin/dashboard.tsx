@@ -161,9 +161,9 @@ const DateEditDialog = ({startDate, endDate}) => {
         body: JSON.stringify(bodyContent)
       });
       if (response.ok) {
-        console.log("Date update successfully.");
+        alert("Date update successfully.");
       } else {
-        console.log("Failed to update account.");
+        alert("Failed to update account.");
       }
     } catch (error) {
       console.error(error);

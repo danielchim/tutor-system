@@ -173,9 +173,9 @@ const EditDialog = ({id, userId}) => {
       });
 
       if (response.ok) {
-        console.log("Job created successfully.");
+        alert("Job created successfully.");
       } else {
-        console.log("Failed to create job.");
+        alert("Failed to create job.");
       }
     } catch (error) {
       console.error(error);
@@ -349,7 +349,6 @@ const CreateDialog = ({id}) => {
 
 
   const handleSubmit = async () => {
-    console.log(selectedSkills);
     const bodyContent ={
       name: jobName,
       user: {
@@ -370,9 +369,9 @@ const CreateDialog = ({id}) => {
       });
 
       if (response.ok) {
-        console.log("Job created successfully.");
+        alert("Job created successfully.");
       } else {
-        console.log("Failed to create job.");
+        alert("Failed to create job.");
       }
     } catch (error) {
       console.error(error);

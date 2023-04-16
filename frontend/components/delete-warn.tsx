@@ -20,9 +20,9 @@ const DeleteWarn = ({onClickUrl}) => {
     try {
       const response = await fetch(onClickUrl, { method: "POST" });
       if (response.ok) {
-        console.log("Account deleted successfully.");
+        alert("Account deleted successfully.");
       } else {
-        console.log("Failed to delete account.");
+        alert("Failed to delete account.");
       }
     } catch (error) {
       console.error(error);

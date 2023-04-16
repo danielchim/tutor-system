@@ -53,9 +53,9 @@ const EditDialog = ({name,email,role,id, password}:EditUser) => {
         },
         body: JSON.stringify(bodyContent)
       });      if (response.ok) {
-        console.log("Account update successfully.");
+        alert("Account update successfully.");
       } else {
-        console.log("Failed to update account.");
+        alert("Failed to update account.");
       }
     } catch (error) {
       console.error(error);

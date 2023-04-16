@@ -1,7 +1,7 @@
 import React from "react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
-import logo from "../public/next.svg";
+import bg from "../public/bg.jpg";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 
@@ -31,10 +31,10 @@ const Login: React.FC = () => {
     <div className="flex h-screen">
       <div className="hidden md:block w-1/2 bg-gray-800">
         <Image
-          src={logo}
+          src={bg}
           alt="logo"
-          width={600}
-          height={600}
+          width={1920}
+          height={1080}
           objectFit="contain"
         />
       </div>

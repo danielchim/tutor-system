@@ -6,7 +6,7 @@ interface SiteConfig {
   mainNav: NavItem[]
   userNav: NavItem[]
   adminNav: NavItem[]
-  companyNav: NavItem[]
+  employerNav: NavItem[]
   links: {
     twitter: string
     github: string
@@ -38,10 +38,6 @@ export const siteConfig: SiteConfig = {
       href: "/employer",
     },
     {
-      title: "Company",
-      href: "/company",
-    },
-    {
       title: "Admin",
       href: "/admin/dashboard",
     },
@@ -55,12 +51,8 @@ export const siteConfig: SiteConfig = {
       title: "Jobs",
       href: "/browse",
     },
-    {
-      title: "Company",
-      href: "/company",
-    },
   ],
-  companyNav: [
+  employerNav: [
     {
       title: "Home",
       href: "/",
@@ -72,10 +64,6 @@ export const siteConfig: SiteConfig = {
     {
       title: "Employer zone",
       href: "/employer",
-    },
-    {
-      title: "Company",
-      href: "/company",
     },
   ],
   links: {

@@ -110,7 +110,6 @@ const EmployerDashboard = () => {
     isLoading: interviewDataIsLoading,
     error: interviewDataError
   } = useSWR([userData ? `http://localhost:8080/api/interviews/${userData?.id}/interviews?employerUserId=${userData?.id}` : null], fetcher);
-  console.log(interviewData);
   return (
     <Layout>
       <div className="container items-center">

@@ -103,14 +103,24 @@ const Browse = () => {
       if (response.ok) {
         alert("Job created successfully.");
         try {
-          const response = await fetch(`http://localhost:8080/api/intervies/`, {
+          const bodyContent ={
+            user:{
+              id: userInfo.user.id
+            },
+            job: {
+              idjobs:selectedJob.idjobs
+            },
+            employer:{
+              id:selectedJob.employer.id
+            }
+          };
+          const response = await fetch(`http://localhost:8080/api/interviews/`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(bodyContent),
           });
-          console.log(response)
         }catch (error) {
           console.error(error);
         }
@@ -223,8 +233,6 @@ const Browse = () => {
           </>
         )
         }
-
-
       </section>
     </Layout>
   )

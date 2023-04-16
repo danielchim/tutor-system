@@ -77,7 +77,6 @@ const EditDialog = ({name,owner,status}:EditCompany) => {
 const CompanyManagement = () => {
   const session = useSession().data;
   const {data, error} = useSWR(['http://localhost:8080/api/companies/'], fetcher);
-  console.log(data)
   if (error) {
     return (
       <Layout>
