@@ -1,51 +1,15 @@
 import React from 'react';
 import { Layout } from '@/components/layout';
 // TODO: consistent all imports to named import
-import  UserManagementWidget  from '@/components/admin/user-management'
-import {JobManagementWidget} from '@/components/admin/job-management'
-import CompanyManagementWidget from '@/components/admin/company-management';
 import {Job} from "@/types/job";
 import Company from "@/types/company";
 import Link from "next/link";
 import {siteConfig} from "@/config/site";
 import {Button, buttonVariants} from "@/components/ui/button";
+import Chip from "@/components/ui/chip";
 
 const jobs: Job[] = [
-  {
-    id: 1,
-    title: "Software Engineer",
-    company: "Acme Corporation",
-    employer: "John Doe",
-    location: "San Francisco, CA",
-    salary: "$100,000 - $150,000",
-    description:
-      "We are seeking a highly skilled software engineer to join our team and help develop cutting-edge software applications.",
-    type: "full-time",
-  },
-  {
-    id: 2,
-    title: "Product Manager",
-    company: "XYZ Corp",
-    employer: "Jane Smith",
-    location: "New York, NY",
-    salary: "$120,000 - $180,000",
-    description:
-      "We are looking for a talented product manager to help us build amazing products that delight our customers.",
-    type: "full-time",
-  },
-  {
-    id: 3,
-    title: "Marketing Specialist",
-    company: "ABC Company",
-    employer: "Joe Smith",
-    location: "Los Angeles, CA",
-    salary: "$70,000 - $90,000",
-    description:
-      "We are seeking a marketing specialist to help us develop and execute marketing campaigns that drive results.",
-    type: "part-time",
-  },
-  // add more jobs as needed
-];
+
 
 const companies:Company[] = [
   {
@@ -71,6 +35,87 @@ const companies:Company[] = [
   }
 ]
 
+const JobManagementWidget = ({ jobs }) => {
+
+  return (
+    <div className="rounded-lg p-6 shadow-lg">
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-lg font-medium">Job Management</h3>
+        <Link href={'/admin/jobs'}>
+          <button
+            className="text-blue-500 hover:text-blue-700 focus:outline-none"
+          >
+            Show more
+          </button>
+        </Link>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full table-auto">
+          <thead>
+          <tr className="text-left text-gray-500">
+            <th className="px-4 py-2">#</th>
+            <th className="px-4 py-2">Job Name</th>
+            <th className="px-4 py-2">Company Name</th>
+            <th className="px-4 py-2">Employer Name</th>
+          </tr>
+          </thead>
+          <tbody>
+          {jobs?.map((job) => (
+            <tr key={job.idjobs} className="border-t border-gray-200">
+              <td className="px-4 py-2">{job.idjobs}</td>
+              <td className="px-4 py-2">{job.name}</td>
+              <td className="px-4 py-2">{job.company.name}</td>
+              <td className="px-4 py-2">{job.employer.user.name}</td>
+            </tr>
+          ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+const UserManagementWidget = ({users}) => {
+  return (
+    <div className="shadow-md rounded-lg p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-medium">User Management</h3>
+        <Link href={'/admin/users'}>
+          <button
+            className="text-blue-500 hover:text-blue-700 focus:outline-none"
+          >
+            Show more
+          </button>
+        </Link>
+
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full table-auto">
+          <thead>
+          <tr className="text-left text-gray-500">
+            <th className="px-4 py-2">#</th>
+            <th className="px-4 py-2">Username</th>
+            <th className="px-4 py-2">Email</th>
+            <th className="px-4 py-2">Role</th>
+          </tr>
+          </thead>
+          <tbody>
+          {users?.map(user => (
+            <tr key={user.id} className="border-t border-gray-200">
+              <td className="px-4 py-2">{user.id}</td>
+              <td className="px-4 py-2">{user.name}</td>
+              <td className="px-4 py-2">{user.email}</td>
+              <td className="px-4 py-2">{user.role.name}</td>
+            </tr>
+          ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+
 
 const CompanyDashboard = () => {
   return (
@@ -82,7 +127,7 @@ const CompanyDashboard = () => {
           </h1>
         </div>
         <div className="w-full p-4">
-          <UserManagementWidget />
+          <UserManagementWidget users={jobs}/>
         </div>
         <div className="w-full p-4">
           <JobManagementWidget  jobs={jobs}/>

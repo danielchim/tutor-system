@@ -5,189 +5,163 @@ import useSWR from 'swr'
 import fetcher from "@/lib/fetcher";
 import Link from "next/link";
 import {Input} from "@/components/ui/input";
-import { ScrollArea } from '@/components/ui/scroll-area';
+import {ScrollArea} from '@/components/ui/scroll-area';
+import {Label} from "@/components/ui/label";
 
 
 interface Job {
   id: number;
-  title: string;
-  company: string;
-  location: string;
-  salary: string;
+  name: string;
+  company: {
+    id: number,
+    name: string
+  };
   description: string;
-  skillList: object;
+  skills: Skills[];
+  created_at: string;
 }
+
+interface Skills {
+  idSkills: number,
+  name:string
+}
+
+const useJobs = (options) => {
+  const [url, setUrl] = useState('');
+
+  useEffect(() => {
+    let url = 'http://localhost:8080/api/jobs/';
+    if (options.searchByName) {
+      url = `http://localhost:8080/api/jobs/searchByName?name=${options.searchByName}`;
+    } else if (options.searchBySkill) {
+      url = `http://localhost:8080/api/skills/${options.searchBySkill}/jobs`;
+    } else if (options.searchByDateRange) {
+      url = `http://localhost:8080/api/jobs/searchByDateRange?startDate=${options.searchByDateRange.startDate}&endDate=${options.searchByDateRange.endDate}`;
+    }
+    setUrl(url);
+  }, [options]);
+
+  return useSWR(url, fetcher);
+};
 
 
 const Browse = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [location, setLocation] = useState('');
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [searchJob, setSearchJob] = useState<string>('')
   const [jobList, setJobList] = useState([])
-
-  const search = (query) => {
-    const url = `http://localhost:8080/api/jobs/searchByName?name=${query}`;
-
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        setJobList(data);
-      })
-      .catch(error => console.error(error));
-
-    setJobList(data)
-  }
-
-  const searchSkill = (query) => {
-    const url = `http://localhost:8080/api/skills/${query}/jobs`;
-
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        setJobList(data);
-      })
-      .catch(error => console.error(error));
-
-    setJobList(data)
-  }
-
-  const applyJob = async (userId, jobId) => {
-    const url = 'http://localhost:8080/api/jobs/apply';
-    const body = JSON.stringify({userId, jobId});
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: body
-    };
-
-    try {
-      const response = await fetch(url, options);
-      const data = await response.json();
-      console.log(data); // do something with the response data
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-
-  const session = useSession().data;
-  const {data, error} = useSWR(['http://localhost:8080/api/jobs/'], fetcher);
-
-  useEffect(() => {
-    data && setJobList(data)
-  }, [data])
-
-
-  if (error) {
-    return (
-      <Layout>
-        <section className="container grid items-start gap-6 pt-6 pb-8 md:py-10">
-          <p>An error occurred while fetching the data.</p>
-        </section>
-      </Layout>
-    )
-  }
-
-
-  const jobs = jobList?.map((job: any) => {
-    return {
-      id: job.idJobs,
-      title: job.name,
-      company: job.company.name,
-      description: job.description,
-      skillList: job.skills,
-    };
+  const [dateRange, setDateRange] = useState(null)
+  const [queryString, setQueryString] = useState(null)
+  const [searchSkillId, setSearchSkillId] = useState(null);
+  const {data, error} = useJobs({
+    searchByName: queryString,
+    searchBySkill: searchSkillId,
+    searchByDateRange: dateRange
   });
 
+  useEffect(() => {
+    data && setJobList(data);
+  }, [data]);
 
-  const SkillTag = ({title, idSkill}) => {
-    return <p className='rounded px-2 bg-zinc-200/80 w-fit inline-block mr-2 cursor-pointer' onClick={() => {
-      searchSkill(idSkill)
-    }}>{title}
-    </p>
+  const handleSearch = (query) => {
+    setQueryString(query)
+  }
 
+  const handleJobApply = (query) => {
+    setQueryString(query)
   }
 
   const handleJobClick = (
-      job: Job
-    ) => {
-      setSelectedJob(job);
-    }
-  ;
-
-  const handleCloseClick = () => {
-
+    job: Job
+  ) => {
+    setSelectedJob(job);
   };
+
+  const searchSkill = (idSkill) => {
+    setSearchSkillId(idSkill);
+  };
+
 
   return (
     <Layout>
       <section className="container grid items-start gap-6 pt-6 pb-8 md:py-10">
-        <div className="flex items-center justify-between mb-6 w-full">
+        <div className="flex w-full items-center justify-between">
           <h1 className="text-3xl font-extrabold leading-tight tracking-tighter sm:text-3xl">
             Job listings
           </h1>
         </div>
         <div className='flex flex-row gap-4'>
-          <Input placeholder='Search jobs...' onChange={(e) => {
-            setSearchJob(e.target.value)
-          }}/>
+          <Input
+            placeholder="Search jobs..."
+            onChange={(e) => {
+              setSearchJob(e.target.value);
+            }}
+          />
           <button onClick={() => {
-            search(searchJob)
-          }} className='bg-black text-white rounded-md px-4 hover:shadow-md hover:shadow-zinc-300 duration-100'>Search
+            handleSearch(searchJob)
+          }} className='rounded-md bg-black px-4 text-white duration-100 hover:shadow-md hover:shadow-zinc-300'>Search
           </button>
-
+        </div>
+        <div className='flex flex-row gap-4'>
+          <div className="grid w-full  items-center gap-1.5">
+            <Label htmlFor="email">Start date</Label>
+            <Input type="date" value="2017-06-01"/>
+          </div>
+          <div className="grid w-full items-center gap-1.5">
+            <Label htmlFor="email">End date</Label>
+            <Input type="date" value="2017-06-01"/>
+          </div>
         </div>
         <p>There are {jobList.length} jobs searched.</p>
         <div className="flex flex-col gap-4">
-          <div className="flex gap-4">
-            <ScrollArea className="h-[200px] w-[350px]" className="w-1/4">
-              {jobs?.map((job) => (
-                <>
-                  <div
-                    key={job.id}
-                    className="bg-white rounded-lg shadow py-4 px-6 mb-4 cursor-pointer hover:bg-gray-100"
-                    onClick={() => handleJobClick(job)}
-                  >
-                    <h3 className="text-lg font-medium mb-2">{job.title}</h3>
-                    <p className="text-gray-700">{job.company}</p>
-                    {job.skillList != null ? job.skillList.map((skill) => {
-                      return <SkillTag title={skill.name} idSkill={skill.idSkills}/>
-                    }) : <></>}
-                  </div>
-                </>
+          <div className="flex h-screen gap-4">
+            <ScrollArea className="h-full w-1/4 min-w-0 flex-1 overflow-y-auto">
+              {data?.map((job) => (
+                <div
+                  key={job.id}
+                  className="mx-4 mb-4 cursor-pointer rounded-lg bg-white py-4 px-6 shadow hover:bg-gray-100"
+                  onClick={() => handleJobClick(job)}
+                >
+                  <h3 className="mb-2 text-lg font-medium">{job.name}</h3>
+                  <p className="text-gray-700">{job.company.name}</p>
+                  {job.skills?.map((skill) => (
+                    <p className='mr-2 inline-block w-fit cursor-pointer rounded bg-zinc-200/80 px-2' onClick={() => searchSkill(skill.idSkills)}>
+                      {skill.name}
+                    </p>
+                  ))}
+                </div>
               ))}
             </ScrollArea>
-            <div className="w-3/4">
+            <div className="w-3/4 min-w-0 flex-1">
               {selectedJob ? (
-                <div className="bg-white rounded-lg shadow py-6 px-8">
-                  <h3 className="text-2xl font-medium mb-2">{selectedJob.title}</h3>
-                  <p className="text-gray-700 mb-2">{selectedJob.company}</p>
-                  <p className="text-gray-700 mb-2">{selectedJob.description}</p>
-                  {selectedJob.skillList != null ? selectedJob.skillList.map((skill) => {
-                    return <SkillTag title={skill.name} idSkill={skill.idSkills}/>
-                  }) : <></>}
+                <div className="rounded-lg bg-white py-6 px-8 shadow">
+                  <h3 className="mb-2 text-2xl font-medium">{selectedJob.name}</h3>
+                  <p className="mb-2 text-gray-700">{selectedJob.company.name}</p>
+                  <p className="mb-2 text-gray-700">{selectedJob.description}</p>
+                  <p className="mb-2 text-gray-700">{selectedJob.created_at}</p>
+                  {selectedJob?.skills?.map((skill:Skills) => (
+                    <p className='mr-2 inline-block w-fit cursor-pointer rounded bg-zinc-200/80 px-2' onClick={() => searchSkill(skill.idSkills)}>
+                      {skill.name}
+                    </p>
+                  ))}
                   <br/>
                   <button
                     onClick={() => {
-                      applyJob('userID', 'jobID')
+                      applyJob('userID', 'jobID');
                     }}
-                    className='bg-black text-white rounded-md px-4 py-2 mt-4 duration-200 hover:shadow-md '>Apply
+                    className="mt-4 rounded-md bg-black px-4 py-2 text-white duration-200 hover:shadow-md"
+                  >
+                    Apply
                   </button>
                 </div>
               ) : (
-                <div className="bg-white rounded-lg shadow py-6 px-8">
-                  <h3 className="text-2xl font-medium mb-2">Select a job on the left to get started</h3>
+                <div className="rounded-lg bg-white py-6 px-8 shadow">
+                  <h3 className="mb-2 text-2xl font-medium">Select a job on the left to get started</h3>
                 </div>
-              )
-              }
+              )}
             </div>
           </div>
         </div>
+
       </section>
     </Layout>
   )

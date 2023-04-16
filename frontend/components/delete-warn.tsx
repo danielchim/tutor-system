@@ -9,12 +9,27 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import {useState} from "react";
 
 const DeleteWarn = ({onClickUrl}) => {
 
-  const onClickAction = () => {
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  }
+  const onClickAction = async () => {
+    setIsDeleting(true);
+    try {
+      const response = await fetch(onClickUrl, { method: "POST" });
+      if (response.ok) {
+        console.log("Account deleted successfully.");
+      } else {
+        console.log("Failed to delete account.");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
   return (
 
     <AlertDialogContent>
@@ -27,7 +42,7 @@ const DeleteWarn = ({onClickUrl}) => {
       </AlertDialogHeader>
       <AlertDialogFooter>
         <AlertDialogCancel>Cancel</AlertDialogCancel>
-        <AlertDialogAction>Continue</AlertDialogAction>
+        <AlertDialogAction onClick={onClickAction}>Continue</AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
 

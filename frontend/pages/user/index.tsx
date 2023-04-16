@@ -46,9 +46,9 @@ const Dashboard = () => {
               <img className="h-48 w-full object-cover md:w-48" src="https://via.placeholder.com/48" alt="User avatar" />
             </div>
             <div className="p-8">
-              <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{userData.name}</div>
-              <div className="mt-2 text-gray-600 text-sm">{userData.email}</div>
-              <div className="mt-2 text-gray-600 text-sm">{userData.createdAt}</div>
+              <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{userData?.name}</div>
+              <div className="mt-2 text-gray-600 text-sm">{userData?.email}</div>
+              <div className="mt-2 text-gray-600 text-sm">{userData?.createdAt}</div>
             </div>
           </div>
         </div>

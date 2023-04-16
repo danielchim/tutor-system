@@ -168,13 +168,13 @@ public class JobService {
         return jobs;
     }
 
-    public boolean createJobHistory(JobHistoryInput jobHistory) {
+    public boolean createJobHistory(int id, JobHistoryInput jobHistory) {
         // Get the current date
         Date now = new Date();
 
         // Insert a new row into the job_history table
         int rowsAffected = jdbcTemplate.update("INSERT INTO job_history (User_idUser, jobs_idjobs, apply_date) VALUES (?, ?, ?)",
-                jobHistory.getJobId(), jobHistory.getUserId(), now);
+                id, jobHistory.getUserId(), now);
 
         // Return true if one row was affected
         return rowsAffected == 1;

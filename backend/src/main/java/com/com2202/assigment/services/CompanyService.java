@@ -2,6 +2,7 @@ package com.com2202.assigment.services;
 
 import com.com2202.assigment.dto.CompanyInput;
 import com.com2202.assigment.entity.Company;
+import com.com2202.assigment.entity.Employer;
 import com.com2202.assigment.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -64,6 +65,19 @@ public class CompanyService {
         }
         return true;
     }
+
+    public List<Employer> getAllEmployersByCompany(int id) {
+        String sql = "SELECT e.idEmployer, e.User_idUser, u.name as u_name, e.Company_idCompany, c.name as c_name " +
+                "FROM employer e " +
+                "JOIN user u ON e.User_idUser = u.idUser " +
+                "JOIN company c ON e.Company_idCompany = c.idCompany " +
+                "WHERE c.idCompany = ?";
+
+        List<Employer> employers = jdbcTemplate.query(sql, new EmployerService.EmployerRowMapper(), id);
+        return employers;
+    }
+
+
 
 
     private static class CompanyRowMapper implements RowMapper<Company> {

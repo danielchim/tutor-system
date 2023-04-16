@@ -19,28 +19,56 @@ import {useSession} from "next-auth/react";
 import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
 
-
-type User = {
-  id: number;
-  username: string;
-  email: string;
-  role: string;
-};
-
 type EditUser = {
   name: string,
   email: string,
+  password: string;
   role: string;
+  id:number;
 }
 
 
-const EditDialog = ({name,email,role}:EditUser) => {
+const EditDialog = ({name,email,role,id, password}:EditUser) => {
+  const roles = { 1: 'Admin', 2: 'Applicant', 3: 'Employer' };
+  const [value, setValue] = React.useState(role);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [bodyContent, setBodyContent] = useState(
+    {
+      id: id,
+      name: name,
+      email: email,
+      password: password,
+      role: {
+        id: role,
+      }
+    }
+  )
+  const onClickAction = async () => {
+    setIsUpdating(true);
+    try {
+      const response = await fetch(`http://localhost:8080/api/users/${id}/update`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(bodyContent)
+      });      if (response.ok) {
+        console.log("Account update successfully.");
+      } else {
+        console.log("Failed to update account.");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
   return(
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
         <DialogTitle>Edit profile</DialogTitle>
         <DialogDescription>
-          Make changes to your profile here. Click save when you're done.
+          Make changes to your profile here. Click save when finished.
         </DialogDescription>
       </DialogHeader>
       <div className="grid gap-4 py-4">
@@ -48,32 +76,40 @@ const EditDialog = ({name,email,role}:EditUser) => {
           <Label htmlFor="name" className="text-right">
             Username
           </Label>
-          <Input id="name" value={name} className="col-span-3" />
+          <Input id="name" defaultValue={name} className="col-span-3"  onChange={(e) => setBodyContent({...bodyContent, name: e.target.value})}/>
         </div>
         <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="username" className="text-right">
+          <Label htmlFor="email" className="text-right">
             Email
           </Label>
-          <Input id="username" value={email} className="col-span-3" />
+          <Input id="email" defaultValue={email} className="col-span-3" onChange={(e) => setBodyContent({...bodyContent, email: e.target.value})}/>
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="password" className="text-right">
+            Password
+          </Label>
+          <Input id="password" defaultValue={password} className="col-span-3" type={'password'} onChange={(e) => setBodyContent({...bodyContent, password: e.target.value})}/>
         </div>
         <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="username" className="text-right">
             Role
           </Label>
-          <Select>
+          <Select onValueChange={(value) => setBodyContent({...bodyContent, role:{id:value}})}>
             <SelectTrigger className="col-span-3">
-              <SelectValue placeholder={role} />
+              <SelectValue aria-label={value}>
+                {roles[value]}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="admin">Admin</SelectItem>
-              <SelectItem value="user">Applicant</SelectItem>
-              <SelectItem value="system">Employer</SelectItem>
+              <SelectItem value="1">Admin</SelectItem>
+              <SelectItem value="2">Applicant</SelectItem>
+              <SelectItem value="3">Employer</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
       <DialogFooter>
-        <Button type="submit">Save changes</Button>
+        <Button type="submit" onClick={onClickAction}>Save changes</Button>
       </DialogFooter>
     </DialogContent>
 
@@ -81,30 +117,47 @@ const EditDialog = ({name,email,role}:EditUser) => {
 }
 
 const UserManagement = () => {
-  const session= useSession().data;
-  const {data, error} = useSWR(['http://localhost:8080/api/users/'],fetcher);
-  console.log(data)
-  if (error) {
-    return (
-      <Layout>
-        <section className="container grid items-start gap-6 pt-6 pb-8 md:py-10">
-          <p>An error occurred while fetching the data.</p>
-        </section>
-      </Layout>
-    )
-  }
+  const [selectedRole, setSelectedRole] = React.useState(null);
+  const { data: userData, error: userDataError } = useSWR(
+    selectedRole
+      ? `http://localhost:8080/api/roles/${selectedRole}/users`
+      : 'http://localhost:8080/api/users/',
+    fetcher
+  );
+  const { data: roleData, error: roleDataError } = useSWR(
+    ['http://localhost:8080/api/roles/'],
+    fetcher
+  );
+  const [value, setValue] = React.useState(0);
   return (
     <Layout>
       <div className="container items-center">
-        <div className="flex items-center justify-between mb-6 w-full p-4">
+        <div className="flex items-center justify-between my-6 w-full">
           <h1 className="text-3xl font-extrabold leading-tight tracking-tighter sm:text-3xl">
             User management
           </h1>
-          <div className="flex w-full max-w-sm items-center space-x-2">
-            <Input type="text" placeholder="Search for users" />
-            <Button type="submit">Search</Button>
-          </div>
         </div>
+        <div className='flex flex-row gap-4 my-6'>
+          <Input placeholder='Search jobs...' onChange={(e) => {
+            // setSearchJob(e.target.value)
+          }}/>
+          <button onClick={() => {
+            // search(searchJob)
+          }} className='bg-black text-white rounded-md px-4 hover:shadow-md hover:shadow-zinc-300 duration-100'>Search
+          </button>
+          <Select onValueChange={(value) => setSelectedRole(value)}>
+            <SelectTrigger className="col-span-3">
+              <SelectValue placeholder={'Select Value'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem key={0} value={null}>None</SelectItem>
+              {roleData?.map(role => (
+                <SelectItem key={role.id} value={role.id}>{role.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
         <div className="overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
@@ -117,7 +170,7 @@ const UserManagement = () => {
             </tr>
             </thead>
             <tbody>
-            {data?.map((user) => (
+            {userData?.map((user) => (
               <tr key={user.id} className="border-t border-gray-200">
                 <td className="px-4 py-2">{user.id}</td>
                 <td className="px-4 py-2">{user.name}</td>
@@ -130,8 +183,7 @@ const UserManagement = () => {
                         Edit
                       </Button>
                     </DialogTrigger>
-
-                    <EditDialog name={user.username} email={user.email} role={user.role.name}/>
+                    <EditDialog name={user.name} email={user.email} role={user.role.id} id={user.id} password={user.password}/>
                   </Dialog>
                   <AlertDialog>
                     <AlertDialogTrigger >
@@ -139,7 +191,8 @@ const UserManagement = () => {
                         Delete
                       </Button>
                     </AlertDialogTrigger>
-                    <DeleteWarn onClickUrl={`http://localhost:1337/api/users/${user.id}`}/>
+                    {/*{TODO: fix api url}*/}
+                    <DeleteWarn onClickUrl={`http://localhost:8080/api/users/${user.id}/delete`}/>
                   </AlertDialog>
                 </td>
               </tr>

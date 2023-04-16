@@ -57,9 +57,9 @@ public class JobController {
         jobService.createJob(job);
     }
 
-    @PostMapping("/apply")
-    public boolean createJobHistory(@RequestBody JobHistoryInput job) {
-       return jobService.createJobHistory(job);
+    @PostMapping("/{id}/apply")
+    public boolean createJobHistory(@PathVariable int id, @RequestBody JobHistoryInput job) {
+       return jobService.createJobHistory(id, job);
     }
 
     @PostMapping("/{id}/update")

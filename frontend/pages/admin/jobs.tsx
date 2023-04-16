@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Layout} from "@/components/layout";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
@@ -25,11 +25,33 @@ import DeleteWarn from "@/components/delete-warn";
 
 type EditJob = {
   name: string
-  company: string
+  company: {
+    id: number,
+    name:string
+  }
   employer: string
 }
 
 const EditDialog = ({name,company,employer}:EditJob) => {
+  const [value, setValue] = useState(null);
+  const [selectedCompany, setSelectedCompany] = useState(null);
+  const { data:companyData, error, isLoading } = useSWR(['http://localhost:8080/api/companies/'], fetcher);
+  const { data: employerData, error: employerError, isLoading: employerLoading } = useSWR(
+    selectedCompany
+      ? `http://localhost:8080/api/companies/${selectedCompany.id}/employers`
+      : null,
+    fetcher
+  );
+  const fetchedCompany = useRef(null);
+  useEffect(() => {
+    if (companyData) {
+      fetchedCompany.current = companyData.reduce((acc, curr) => {
+        acc[curr.id] = curr;
+        return acc;
+      }, {});
+      setValue(fetchedCompany.current[company.id]);
+    }
+  }, [company.id, companyData]);
   return(
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
@@ -41,28 +63,40 @@ const EditDialog = ({name,company,employer}:EditJob) => {
       <div className="grid gap-4 py-4">
         <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="name" className="text-right">
-            Username
-          </Label>
-          <Input id="name" value={name} className="col-span-3" />
-        </div>
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="username" className="text-right">
             Job title
           </Label>
-          <Input id="username" value={company} className="col-span-3" />
+          <Input id="name" defaultValue={name} className="col-span-3" />
         </div>
+
         <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="username" className="text-right">
             Company
           </Label>
-          <Select>
+          <Select onValueChange={(res) => setSelectedCompany(fetchedCompany.current[res])}>
             <SelectTrigger className="col-span-3">
-              <SelectValue placeholder={employer} />
+              <SelectValue placeholder={value?.name} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="admin">Admin</SelectItem>
-              <SelectItem value="user">Applicant</SelectItem>
-              <SelectItem value="system">Employer</SelectItem>
+              {companyData?.map(company => (
+                <SelectItem key={company.id} value={company.id}>{company.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="username" className="text-right">
+            Employer
+          </Label>
+          <Select>
+            <SelectTrigger className="col-span-3">
+              <SelectValue placeholder={employerData?.name} />
+            </SelectTrigger>
+            <SelectContent>
+              {employerData?.map((employer) => (
+                <SelectItem key={employer.user.id} value={employer.user.id}>
+                  {employer.user.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -77,7 +111,6 @@ const EditDialog = ({name,company,employer}:EditJob) => {
 const JobsManagement = () => {
   const session= useSession().data;
   const {data, error} = useSWR(['http://localhost:8080/api/jobs/'], fetcher);
-  console.log(data)
   if (error) {
     return (
       <Layout>
@@ -124,7 +157,7 @@ const JobsManagement = () => {
                         Edit
                       </Button>
                     </DialogTrigger>
-                    <EditDialog name={job.name} company={job.company.name} employer={job.employer.user.name}/>
+                    <EditDialog name={job.name} company={job.company} employer={job.employer.user.name}/>
                   </Dialog>
                   <AlertDialog>
                     <AlertDialogTrigger >
@@ -132,7 +165,7 @@ const JobsManagement = () => {
                         Delete
                       </Button>
                     </AlertDialogTrigger>
-                    <DeleteWarn />
+                    <DeleteWarn onClickUrl={`http://localhost:8080/api/jobs/${job.idjobs}/delete`}/>
                   </AlertDialog>
                 </td>
               </tr>

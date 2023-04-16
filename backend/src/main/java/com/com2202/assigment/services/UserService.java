@@ -41,6 +41,7 @@ public class UserService {
 
     public boolean updateUser(User user) {
         String sql = "UPDATE user SET name = ?, email = ?, password = ?, Role_idRole = ? WHERE idUser = ?";
+        System.out.println(user.getRole().getId());
         int result = jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getPassword(), user.getRole() == null ? null :user.getRole().getId(), user.getId());
         return result == 1;
     }
@@ -67,7 +68,7 @@ public class UserService {
             user.setId(rs.getInt("idUser"));
             user.setName(rs.getString("name"));
             user.setEmail(rs.getString("email"));
-            // user.setPassword(rs.getString("password"));
+            user.setPassword(rs.getString("password"));
             user.setCreatedAt(rs.getDate("created_at"));
 
             Role role = new Role();
