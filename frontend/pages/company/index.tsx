@@ -4,11 +4,9 @@ import { Layout } from '@/components/layout';
 import {Job} from "@/types/job";
 import Company from "@/types/company";
 import Link from "next/link";
-import {siteConfig} from "@/config/site";
-import {Button, buttonVariants} from "@/components/ui/button";
-import Chip from "@/components/ui/chip";
 
-const jobs: Job[] = [
+
+const jobs: Job[] = []
 
 
 const companies:Company[] = [
