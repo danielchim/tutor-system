@@ -145,10 +145,12 @@ public class InterviewService {
     }
 
     public List<Interview> getInterviewByUserId(int id, Integer employerUserId) {
-        String sql = "SELECT i.*, j.name AS job_name, u.name AS employer_name FROM interview i " +
-                "JOIN jobs j ON i.jobs_idjobs = j.idjobs " +
-                "JOIN employer e ON i.Employer_idEmployer = e.idEmployer " +
-                "JOIN user u ON e.User_idUser = u.idUser ";
+        String sql = "SELECT i.*, j.name AS job_name, u.name AS employer_name, u2.name AS user_name\n" +
+                "FROM interview i \n" +
+                "JOIN jobs j ON i.jobs_idjobs = j.idjobs \n" +
+                "JOIN employer e ON i.Employer_idEmployer = e.idEmployer \n" +
+                "JOIN user u ON e.User_idUser = u.idUser\n" +
+                "JOIN user u2 ON i.User_idUser = u2.idUser\n";
 
         if (employerUserId == null) {
             sql += "WHERE i.User_idUser = ?";
@@ -177,7 +179,7 @@ public class InterviewService {
 
             User user = new User();
             user.setId(rs.getInt("User_idUser"));
-            user.setName(rs.getString("employer_name"));
+            user.setName(rs.getString("User_name"));
             interview.setUser(user);
 
             Jobs job = new Jobs();
@@ -187,6 +189,9 @@ public class InterviewService {
 
             Employer employer = new Employer();
             employer.setId(rs.getInt("Employer_idEmployer"));
+            User employerUser = new User();
+            employerUser.setName("employer_name");
+            employer.setUser(employerUser);
             interview.setEmployer(employer);
 
             return interview;

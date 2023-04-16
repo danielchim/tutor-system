@@ -47,7 +47,7 @@ const JobManagementWidget = ({jobs}) => {
 };
 
 const InterviewManagementWidget = ({interviews}) => {
-
+  console.log(interviews)
   return (
     <div className="rounded-lg p-6 shadow-lg">
       <div className="mb-4 flex items-center justify-between">

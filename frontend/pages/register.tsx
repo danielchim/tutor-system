@@ -1,12 +1,13 @@
 import React, {useState} from "react";
 import Image from "next/image";
 import bg from "../public/bg.jpg";
-import {router} from "next/client";
-
+import { useRouter } from 'next/navigation';
 const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const router = useRouter();
+
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
