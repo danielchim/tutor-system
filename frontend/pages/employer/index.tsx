@@ -8,41 +8,13 @@ import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
 import {useSession} from "next-auth/react";
 
-
-const jobs: Job[] = []
-
-
-const companies: Company[] = [
-  {
-    id: 1,
-    name: 'Acme Inc.',
-    owner: 'John Doe',
-    registrationDate: '2022-02-01',
-    status: 'approved'
-  },
-  {
-    id: 2,
-    name: 'XYZ Corp',
-    owner: 'Jane Smith',
-    registrationDate: '2021-12-15',
-    status: 'rejected'
-  },
-  {
-    id: 3,
-    name: 'Smith & Co',
-    owner: 'Mike Johnson',
-    registrationDate: '2022-01-10',
-    status: 'pending'
-  }
-]
-
 const JobManagementWidget = ({jobs}) => {
 
   return (
     <div className="rounded-lg p-6 shadow-lg">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-medium">Jobs dashboard</h3>
-        <Link href={'/admin/jobs'}>
+        <Link href={'/employer/jobs'}>
           <button
             className="text-blue-500 hover:text-blue-700 focus:outline-none"
           >
@@ -80,7 +52,7 @@ const InterviewManagementWidget = ({interviews}) => {
     <div className="rounded-lg p-6 shadow-lg">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-medium">Upcoming interview</h3>
-        <Link href={'/admin/jobs'}>
+        <Link href={'/employer/jobs'}>
           <button
             className="text-blue-500 hover:text-blue-700 focus:outline-none"
           >
@@ -128,12 +100,6 @@ const EmployerDashboard = () => {
       setUserData(roleId)
     }
   }, [session])
-  const body = {
-    // your JSON data here
-    user: {
-      id: userData?.id
-    }
-  }
   const {
     data: jobData,
     isLoading: jobDataIsLoading,
