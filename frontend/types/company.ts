@@ -1,7 +1,6 @@
 export default interface Company {
   id: number;
   name: string;
-  owner: string;
-  registrationDate: string;
-  status: 'approved' | 'rejected' | 'pending';
+  created_at: Date,
+  status: boolean
 }

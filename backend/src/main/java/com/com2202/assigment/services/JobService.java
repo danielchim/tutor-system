@@ -174,7 +174,7 @@ public class JobService {
         Date now = new Date();
 
         // Insert a new row into the job_history table
-        int rowsAffected = jdbcTemplate.update("INSERT INTO job_history (User_idUser, jobs_idjobs, apply_date) VALUES (?, ?, ?)",
+        int rowsAffected = jdbcTemplate.update("INSERT INTO job_history (jobs_idjobs, User_idUser, apply_date) VALUES (?, ?, ?)",
                 id, jobHistory.getUserId(), now);
 
         // Return true if one row was affected

@@ -10,6 +10,7 @@ import {Label} from "@/components/ui/label";
 
 
 interface Job {
+  idjobs: number;
   id: number;
   name: string;
   company: {
@@ -48,11 +49,13 @@ const useJobs = (options) => {
 const Browse = () => {
   const {data: userInfo} = useSession();
 
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [selectedJob, setSelectedJob] = useState(null);
   const [searchJob, setSearchJob] = useState<string>('')
   const [jobList, setJobList] = useState([])
   const [queryString, setQueryString] = useState(null)
+  const [isUpdating, setIsUpdating] = useState(false);
   const [searchSkillId, setSearchSkillId] = useState(null);
+  const [userData, setUserData] = useState(null);
   const {data: dateData, isLoading: dateLoading, error: dateError} = useSWR(`http://localhost:8080/api/date/`, fetcher)
   const [dateRange, setDateRange] = useState(!dateLoading ? [dateData[0].startDate, dateData[0].endDate] : ['2022-01-01', '2023-04-30']);
   const {data, isLoading, error} = useJobs({
@@ -76,9 +79,50 @@ const Browse = () => {
     setQueryString(query)
   }
 
-  const handleJobApply = (query) => {
-    setQueryString(query)
-  }
+  const handleJobApply = async () => {
+    const bodyContent ={
+      userId:userInfo.user.id,
+      job: {
+        idjobs:selectedJob.idjobs
+      },
+      employer:{
+        id:selectedJob.employer.id
+      }
+    };
+
+    setIsUpdating(true);
+    try {
+      const response = await fetch(`http://localhost:8080/api/jobs/${selectedJob.idjobs}/apply`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyContent),
+      });
+
+      if (response.ok) {
+        alert("Job created successfully.");
+        try {
+          const response = await fetch(`http://localhost:8080/api/intervies/`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bodyContent),
+          });
+          console.log(response)
+        }catch (error) {
+          console.error(error);
+        }
+      } else {
+        alert("Failed to create job.");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
   const handleJobClick = (
     job: Job
@@ -162,9 +206,7 @@ const Browse = () => {
                       ))}
                       <br/>
                       <button
-                        onClick={() => {
-                          handleJobApply(userInfo.user.id);
-                        }}
+                        onClick={handleJobApply}
                         className="mt-4 rounded-md bg-black px-4 py-2 text-white duration-200 hover:shadow-md"
                       >
                         Apply
