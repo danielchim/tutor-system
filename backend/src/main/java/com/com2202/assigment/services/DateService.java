@@ -1,18 +1,14 @@
 package com.com2202.assigment.services;
 
 import com.com2202.assigment.entity.Date;
-import com.com2202.assigment.entity.Role;
-import com.com2202.assigment.entity.User;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
-
-import static com.com2202.assigment.util.UidGenerator.generateUid;
 
 @Service
 public class DateService {
