@@ -38,7 +38,7 @@ const JobManagementWidget = ({ jobs }) => {
   return (
     <div className="rounded-lg p-6 shadow-lg">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg font-medium">Job Management</h3>
+        <h3 className="text-lg font-medium">Company Management</h3>
         <Link href={'/admin/jobs'}>
           <button
             className="text-blue-500 hover:text-blue-700 focus:outline-none"

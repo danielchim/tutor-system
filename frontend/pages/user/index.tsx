@@ -7,23 +7,39 @@ import {useSession} from "next-auth/react";
 import {session} from "next-auth/core/routes";
 import useSWR from "swr";
 import fetcher from "@/lib/fetcher";
-import {DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from "@/components/ui/dialog";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Select, SelectValue} from "@radix-ui/react-select";
 import {SelectContent, SelectItem, SelectTrigger} from "@/components/ui/select";
 
+interface EditUser{
+  id:number,
+  name:string,
+  email:string,
+  password:string
+}
 
 interface JobApplication {
   id: number;
   job: Object;
-  company: Object;
+  company: {
+    id:number,
+    name: string
+  };
   applyDate: Date;
 }
 
-const EditDialog = ({name,email,role,id, password}:EditUser) => {
+const EditDialog = ({id,name,email,password}:EditUser) => {
   const roles = { 1: 'Admin', 2: 'Applicant', 3: 'Employer' };
-  const [value, setValue] = React.useState(role);
   const [isUpdating, setIsUpdating] = useState(false);
   const [bodyContent, setBodyContent] = useState(
     {
@@ -31,9 +47,6 @@ const EditDialog = ({name,email,role,id, password}:EditUser) => {
       name: name,
       email: email,
       password: password,
-      role: {
-        id: role,
-      }
     }
   )
   const onClickAction = async () => {
@@ -83,23 +96,6 @@ const EditDialog = ({name,email,role,id, password}:EditUser) => {
           </Label>
           <Input id="password" defaultValue={password} className="col-span-3" type={'password'} onChange={(e) => setBodyContent({...bodyContent, password: e.target.value})}/>
         </div>
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="username" className="text-right">
-            Role
-          </Label>
-          <Select onValueChange={(value) => setBodyContent({...bodyContent, role:{id:value}})}>
-            <SelectTrigger className="col-span-3">
-              <SelectValue aria-label={value}>
-                {roles[value]}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">Admin</SelectItem>
-              <SelectItem value="2">Applicant</SelectItem>
-              <SelectItem value="3">Employer</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
       </div>
       <DialogFooter>
         <Button type="submit" onClick={onClickAction}>Save changes</Button>
@@ -129,9 +125,20 @@ const Dashboard = () => {
           <h1 className="text-3xl font-extrabold tracking-tighter text-slate-900">
             Welcome back, {userData?.name}
           </h1>
-          <Button>
-            Edit Profile
-          </Button>
+          {
+            isLoading?(
+              <p>Loading...</p>
+            ):(
+              <Dialog>
+                <DialogTrigger>
+                  <Button>
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <EditDialog name={userData?.name} email={userData?.email}  id={userData?.id} password={userData?.password}/>
+              </Dialog>
+            )
+          }
         </div>
         <div className=" mx-auto bg-white rounded-xl shadow py-6 px-8 overflow-hidden ">
           <div className="md:flex">

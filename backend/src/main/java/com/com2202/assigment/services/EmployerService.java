@@ -1,9 +1,6 @@
 package com.com2202.assigment.services;
 
-import com.com2202.assigment.entity.Company;
-import com.com2202.assigment.entity.Employer;
-import com.com2202.assigment.entity.Skills;
-import com.com2202.assigment.entity.User;
+import com.com2202.assigment.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -37,6 +34,15 @@ public class EmployerService {
     }
 
     public Employer getEmployerByUserId(int id) {
+        String sql = "SELECT e.*, c.name AS c_name, u.name AS u_name "
+                + "FROM employer e "
+                + "JOIN company c ON e.Company_idCompany = c.idCompany "
+                + "JOIN user u ON e.User_idUser = u.idUser "
+                + "WHERE u.idUser = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, new EmployerRowMapper());
+    }
+
+    public List<Jobs> getJobsByEmployerId(int id) {
         String sql = "SELECT e.*, c.name AS c_name, u.name AS u_name "
                 + "FROM employer e "
                 + "JOIN company c ON e.Company_idCompany = c.idCompany "

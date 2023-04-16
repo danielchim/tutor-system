@@ -1,6 +1,7 @@
 package com.com2202.assigment.api;
 
 import com.com2202.assigment.entity.Employer;
+import com.com2202.assigment.entity.Jobs;
 import com.com2202.assigment.services.EmployerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,11 @@ public class EmployerController {
     @GetMapping("/{id}")
     public Employer getEmployerById(@PathVariable int id) {
         return employerService.getEmployerById(id);
+    }
+
+    @GetMapping("/{id}/jobs")
+    public List<Jobs> getJobsByEmployerId(@PathVariable int id) {
+        return employerService.getJobsByEmployerId(id);
     }
 
     @PostMapping("/")

@@ -1,6 +1,6 @@
 package com.com2202.assigment.api;
 
-import com.com2202.assigment.entity.Date;
+import com.com2202.assigment.entity.SystemDate;
 import com.com2202.assigment.entity.Role;
 import com.com2202.assigment.services.DateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +17,11 @@ public class DateController {
     @Autowired
     DateService dateService;
     @GetMapping("/")
-    public List<Date> getAllDates() {
+    public List<SystemDate> getAllDates() {
         return dateService.getAllDates();
     }
     @PostMapping("/update")
-    public boolean updateRole(@RequestBody Date date) {
+    public boolean updateRole(@RequestBody SystemDate date) {
         return dateService.updateSystemDate(date);
     }
 }

@@ -1,12 +1,11 @@
 package com.com2202.assigment.entity;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "system_date")
-public class Date {
+public class SystemDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +18,7 @@ public class Date {
     @Column(name = "endate")
     private LocalDate endDate;
 
-    public Date() {
+    public SystemDate() {
     }
 
     public int getId() {
