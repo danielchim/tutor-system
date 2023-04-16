@@ -205,6 +205,7 @@ const Browse = () => {
                   {selectedJob ? (
                     <div className="rounded-lg bg-white py-6 px-8 shadow">
                       <h3 className="mb-2 text-2xl font-medium">{selectedJob.name}</h3>
+                      <p className="mb-2 text-gray-700">{selectedJob.employer.user.name}</p>
                       <p className="mb-2 text-gray-700">{selectedJob.company.name}</p>
                       <p className="mb-2 text-gray-700">{selectedJob.description}</p>
                       <p className="mb-2 text-gray-700">{selectedJob.created_at}</p>
